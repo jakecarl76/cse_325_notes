@@ -246,7 +246,7 @@
     }
     /*END XAML TEXT COLORING*/
     
-    txt-red,
+    .txt-red,
     .red
     {
       color: red;
@@ -256,7 +256,47 @@
     {
       color: blue;
     }
-    
+    .txt-green,
+    .green
+    {
+      color: green;
+    }
+    .private,
+    .txt-indigo
+    {
+      color: indigo;
+    }
+    .public,
+    .txt-royblue
+    {
+      color: royalblue;
+    }
+    .txt-deeppink,
+    .deeppink,
+    .field
+    {
+      color: deeppink
+    }
+    .property
+    {
+      color: goldenrod;
+    }
+    .options
+    {
+      color: blue;
+    }
+    .attributes
+    {
+      color: orangered;
+    }
+    .txt-good
+    {
+      color: darkgreen;
+    }
+    .txt-bad
+    {
+      color: darkred;
+    }
     .hl_yellow,
     .hl_ylw
     {
@@ -266,7 +306,10 @@
     {
       text-align: center;
     }
-    
+    .hidden
+    {
+      display: none;
+    }
   </style>
   
 <script>
@@ -8237,7 +8280,306 @@
   + "</li>"
   + "</ul>"
   
-  + "<h5 id='r15-5a'><em>Installing the <Strong class='dclr-c code'>JsonSerializer</strong> class</em></h5>"
+  + "<h5 id='r15-5a'><em><Strong class='dclr-c code'>JsonSerializer</strong> class Examples</em></h5>"
+  + "<p>"
+  + "To help understand what will and won't be serialized, we will construct and then proceed to "
+  + "serialize and deserialize different classes. This will show what differences properties, "
+  + "fields, attributes, and option flags can make to the serialization process."
+  + "</p>"
+  + "<ul>"
+  + "<li>"
+  + "Consider the following classes as separate class files:"
+  + "<pre class='code'>"
+  + "<span class='dclr'>class</span> <span class='dclr-c'>TotalPrivateClass</span>\n"
+  + "{\n"
+  + "  <span class='dclr'>private string</span> strVal;\n"
+  + "  <span class='dclr'>private int</span> intVal;\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> ShowMe()\n"
+  + "  {\n"
+  + "    <span class='obj'>Console</span>.WriteLine(<span class='str'>$\"TotalPrivateClass: strVal: {</span><span class='ths'>this</span>.strVal<span class='str'>}, intVal: {</span><span class='ths'>this</span>.intVal<span class='str'>}\"</span>);\n"
+  + "  }\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> SetMe(<span class='dclr'>string</span> str, <span class='dclr'>int</span> num)\n"
+  + "  {\n"
+  + "    <span class='ths'>this</span>.strVal = str;\n"
+  + "    <span class='ths'>this</span>.intVal = num;\n"
+  + "  }\n"
+  + "}\n"
+  + "\n...\n\n"
+  + "<span class='using'>using</span> System.Text.Json.Serialization;\n"
+  + "\n"
+  + "<span class='dclr'>class</span> <span class='dclr-c'>AttPrivateClass</span>\n"
+  + "{\n"
+  + "  [<span class='dclr-c'>JsonInclude</span>]\n"
+  + "  <span class='dclr'>private string</span> strVal;\n"
+  + "  [<span class='dclr-c'>JsonInclude</span>]\n"
+  + "  <span class='dclr'>private int</span> intVal;\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> ShowMe()\n"
+  + "  {\n"
+  + "    <span class='obj'>Console</span>.WriteLine(<span class='str'>$\"AttPrivateClass: strVal: {</span><span class='ths'>this</span>.strVal<span class='str'>}, intVal: {</span><span class='ths'>this</span>.intVal<span class='str'>}\"</span>);\n"
+  + "  }\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> SetMe(<span class='dclr'>string</span> str, <span class='dclr'>int</span> num)\n"
+  + "  {\n"
+  + "    <span class='ths'>this</span>.strVal = str;\n"
+  + "    <span class='ths'>this</span>.intVal = num;\n"
+  + "  }\n"
+  + "}\n"
+  + "\n...\n"
+  + "<span class='dclr'>class</span> <span class='dclr-c'>PubFieldsClass</span>\n"
+  + "{\n"
+  + "  <span class='dclr'>public string</span> strVal;\n"
+  + "  <span class='dclr'>public int</span> intVal;\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> ShowMe()\n"
+  + "  {\n"
+  + "    <span class='obj'>Console</span>.WriteLine(<span class='str'>$\"PublicFieldsClass: strVal: {</span><span class='ths'>this</span>.strVal<span class='str'>}, intVal: {</span><span class='ths'>this</span>.intVal<span class='str'>}\"</span>);\n"
+  + "  }\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> SetMe(<span class='dclr'>string</span> str, <span class='dclr'>int</span> num)\n"
+  + "  {\n"
+  + "    <span class='ths'>this</span>.strVal = str;\n"
+  + "    <span class='ths'>this</span>.intVal = num;\n"
+  + "  }\n"
+  + "}\n"
+  + "\n...\n"
+  + "<span class='dclr'>class</span> <span class='dclr-c'>PrivatePropertiesClass</span>\n"
+  + "{\n"
+  + "  <span class='dclr'>private string</span> strVal { <span class='sttr'>set</span>; <span class='gttr'>get</span>;}\n"
+  + "  <span class='dclr'>private int</span> intVal {<span class='sttr'>set</span>; <span class='gttr'>get</span>;}\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> ShowMe()\n"
+  + "  {\n"
+  + "    <span class='obj'>Console</span>.WriteLine(<span class='str'>$\"PrivatePropertiesClass: strVal: {</span><span class='ths'>this</span>.strVal<span class='str'>}, intVal: {</span><span class='ths'>this</span>.intVal<span class='str'>}\"</span>);\n"
+  + "  }\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> SetMe(<span class='dclr'>string</span> str, <span class='dclr'>int</span> num)\n"
+  + "  {\n"
+  + "    <span class='ths'>this</span>.strVal = str;\n"
+  + "    <span class='ths'>this</span>.intVal = num;\n"
+  + "  }\n"
+  + "}\n"
+  + "<span class='hidden'>"
+  + "\n...\n"
+  + "<span class='dclr'>class</span> <span class='dclr-c'>PublicPropertiesSetClass</span>\n"
+  + "{\n"
+  + "  <span class='dclr'>public string</span> strVal {<span class='gttr'>get</span>; <span class='sttr'>set</span>; }\n"
+  + "  <span class='dclr'>public int</span> intVal {<span class='gttr'>get</span>; <span class='sttr'>set</span>; }\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> ShowMe()\n"
+  + "  {\n"
+  + "    <span class='obj'>Console</span>.WriteLine(<span class='str'>$\"PublicPropertiesSetClass: strVal: {</span><span class='ths'>this</span>.strVal<span class='str'>}, intVal: {</span><span class='ths'>this</span>.intVal<span class='str'>}\"</span>);\n"
+  + "  }\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> SetMe(<span class='dclr'>string</span> str, <span class='dclr'>int</span> num)\n"
+  + "  {\n"
+  + "    <span class='ths'>this</span>.strVal = str;\n"
+  + "    <span class='ths'>this</span>.intVal = num;\n"
+  + "  }\n"
+  + "}\n"
+  + "</span>"
+  + "\n...\n"
+  + "<span class='using'>using</span> System.Text.Json.Serialization;\n"
+  + "<span class='dclr'>class</span> <span class='dclr-c'>AttPrivatePropertiesClass</span>\n"
+  + "{\n"
+  + "  [<span class='dclr-c'>JsonInclude</span>]\n"
+  + "  <span class='dclr'>private string</span> strVal { <span class='sttr'>set</span>; <span class='gttr'>get</span>;}\n"
+  + "  [<span class='dclr-c'>JsonInclude</span>]\n"
+  + "  <span class='dclr'>private int</span> intVal {<span class='sttr'>set</span>; <span class='gttr'>get</span>;}\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> ShowMe()\n"
+  + "  {\n"
+  + "    <span class='obj'>Console</span>.WriteLine(<span class='str'>$\"PrivatePropertiesClass: strVal: {</span><span class='ths'>this</span>.strVal<span class='str'>}, intVal: {</span><span class='ths'>this</span>.intVal<span class='str'>}\"</span>);\n"
+  + "  }\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> SetMe(<span class='dclr'>string</span> str, <span class='dclr'>int</span> num)\n"
+  + "  {\n"
+  + "    <span class='ths'>this</span>.strVal = str;\n"
+  + "    <span class='ths'>this</span>.intVal = num;\n"
+  + "  }\n"
+  + "}\n"
+  + "<span class='dclr'>class</span> <span class='dclr-c'>PublicPropertiesClass</span>\n"
+  + "{\n"
+  + "  <span class='dclr'>public string</span> strVal { <span class='sttr'>set</span>; <span class='gttr'>get</span>;}\n"
+  + "  <span class='dclr'>public int</span> intVal {<span class='sttr'>set</span>; <span class='gttr'>get</span>;}\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> ShowMe()\n"
+  + "  {\n"
+  + "    <span class='obj'>Console</span>.WriteLine(<span class='str'>$\"PublicPropertiesClass: strVal: {</span><span class='ths'>this</span>.strVal<span class='str'>}, intVal: {</span><span class='ths'>this</span>.intVal<span class='str'>}\"</span>);\n"
+  + "  }\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> SetMe(<span class='dclr'>string</span> str, <span class='dclr'>int</span> num)\n"
+  + "  {\n"
+  + "    <span class='ths'>this</span>.strVal = str;\n"
+  + "    <span class='ths'>this</span>.intVal = num;\n"
+  + "  }\n"
+  + "}"
+  + "\n...\n"
+  + "<span class='dclr'>class</span> <span class='dclr-c'>PublicPropertiesGetClass</span>\n"
+  + "{\n"
+  + "  <span class='dclr'>public string</span> strVal { <span class='gttr'>get</span>;}\n"
+  + "  <span class='dclr'>public int</span> intVal {<span class='gttr'>get</span>;}\n"
+  + "\n"
+  + "  <span class='comment'>//Note that these are used to init. the values "
+  + "of the non-static properties\n  //as they can't otherwise be set without their 'set;' property</span>\n"
+  + "  <span class='dclr'>public static string</span> initStr = <span class='str'>\"\"</span>;\n"
+  + "  <span class='dclr'>public static int</span> initInt = -1;\n"
+  + "\n"
+  + "  <span class='dclr'>public</span> PublicPropertiesGetClass()\n"
+  + "  {\n"
+  + "    <span class='ths'>this</span>.strVal = <span class='dclr-c'>PublicPropertiesGetClass</span>.initStr;\n"
+  + "    <span class='ths'>this</span>.intVal = <span class='dclr-c'>PublicPropertiesGetClass</span>.initInt;\n"
+  + "  }\n"
+  + "\n"
+  + "  <span class='dclr'>public void</span> ShowMe()\n"
+  + "  {\n"
+  + "    <span class='obj'>Console</span>.WriteLine(<span class='str'>$\"PublicPropertiesGetClass: strVal: {</span><span class='ths'>this</span>.strVal<span class='str'>}, intVal: {</span><span class='ths'>this</span>.intVal<span class='str'>}\"</span>);\n"
+  + "  }\n"
+  + "}\n"
+  + "\n...\n"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Each class was serialized and then deserialize"
+  + "</li>"
+  + "<li>"
+  + "Some class instances were given options "
+  + "with the <strong class='code'>IncludeFields</strong> flag active"
+  + "</li>"
+  + "<li>"
+  + "If a class didn't serialize correctly, a string equivalent to if the process "
+  + "was successful was constructed and used for the deserialization test"
+  + "</li>"
+  + "<li>"
+  + "The results of the serialization and deserialization tests are in the following table"
+  + "</li>"
+  + "<li>"
+  + "<table class='centered'>"
+  + "<tr>"
+  + "<th>Class Name</th><th>Field Type</th>"
+  + "<th>Used Options</th><th>Used Attributes</th>"
+  + "<th>Serialization Result</th><th>Deserialization Result</th>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>TotalPrivateClass</td>"
+  + "<td><span class='txt-indigo'>Private</span> <span class='field'>Fields</span></td>"
+  + "<td>No</td>"
+  + "<td>No</td>"
+  + "<td class='txt-bad' title='output: {}'>Failed</td>"
+  + "<td class='txt-bad' title='output: TotalPrivateClass: strVal: , intVal: 0'>Failed</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>TotalPrivateClass</td>"
+  + "<td><span class='txt-indigo'>Private</span> <span class='field'>Fields</span></td>"
+  + "<td class='options'>Yes</td>"
+  + "<td>No</td>"
+  + "<td class='txt-bad' title='output: {}'>Failed</td>"
+  + "<td class='txt-bad' title='output: TotalPrivateClass: strVal: , intVal: 0'>Failed</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>AttPrivateClass</td>"
+  + "<td><span class='txt-indigo'>Private</span> <span class='field'>Fields</span></td>"
+  + "<td>No</td>"
+  + "<td class='attributes'>Yes</td>"
+  + "<td class='txt-good' title='output: {\"strVal\":\"Attribute Private Class\",\"intVal\":3}'>Success</td>"
+  + "<td class='txt-good' title='output: AttPrivateClass: strVal: Attribute Private Class, intVal: 3'>Success</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>PubFieldsClass</td>"
+  + "<td><span class='public'>Public</span> <span class='field'>Fields</span></td>"
+  + "<td>No</td>"
+  + "<td>No</td>"
+  + "<td class='txt-bad' title='output: {}'>Failed</td>"
+  + "<td class='txt-bad' title='output: PublicFieldsClass: strVal: , intVal: 0'>Failed</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>PubFieldsClass</td>"
+  + "<td><span class='public'>Public</span> <span class='field'>Fields</span></td>"
+  + "<td class='options'>Yes</td>"
+  + "<td>No</td>"
+  + "<td class='txt-good' title='output: {\"strVal\":\" Public Fields Class\",\"intVal\":5}'>Success</td>"
+  + "<td class='txt-good' title='output: PublicFieldsClass: strVal: Public Fields Class, intVal: 5'>Success</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>PrivatePropertiesClass</td>"
+  + "<td><span class='txt-indigo'>Private</span> <span class='property'>Properties</span> (get&nbsp;+&nbsp;set)</td>"
+  + "<td>No</td>"
+  + "<td>No</td>"
+  + "<td class='txt-bad' title='output: {}'>Failed</td>"
+  + "<td class='txt-bad' title='output: PrivatePropertiesClass: strVal: , intVal: 0'>Failed</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>PrivatePropertiesClass</td>"
+  + "<td><span class='txt-indigo'>Private</span> <span class='property'>Properties</span> (get&nbsp;+&nbsp;set)</td>"
+  + "<td class='options'>Yes</td>"
+  + "<td>No</td>"
+  + "<td class='txt-bad' title='output: {}'>Failed</td>"
+  + "<td class='txt-bad' title='output: PrivatePropertiesClass: strVal: , intVal: 0'>Failed</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>AttPrivatePropertiesClass</td>"
+  + "<td><span class='txt-indigo'>Private</span> <span class='property'>Properties</span> (get&nbsp;+&nbsp;set)</td>"
+  + "<td>No</td>"
+  + "<td class='attributes'>Yes</td>"
+  + "<td class='txt-good' title='output: {\"strVal\":\"Att Private Properties Class\",\"intVal\":8}'>Success</td>"
+  + "<td class='txt-good' title='output: PrivatePropertiesClass: strVal: Att Private Properties Class, intVal: 8'>Success</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>PublicPropertiesClass</td>"
+  + "<td><span class='public'>Public</span> <span class='property'>Properties</span> (get&nbsp;+&nbsp;set)</td>"
+  + "<td>No</td>"
+  + "<td>No</td>"
+  + "<td class='txt-good' title='output: {\"strVal\":\"Public Properties Class\",\"intVal\":9}'>Success</td>"
+  + "<td class='txt-good' title='output: PublicPropertiesClass: strVal: Public Properties Class, intVal: 9'>Success</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>PublicPropertiesGetClass</td>"
+  + "<td><span class='public'>Public</span> <span class='property'>Properties</span> (get&nbsp;only)</td>"
+  + "<td>No</td>"
+  + "<td>No</td>"
+  + "<td class='txt-good' title='output: {\"strVal\":\"Public Properties Get Only Class\",\"intVal\":10}'>Success</td>"
+  + "<td class='txt-bad' title='output: PublicPropertiesGetClass: strVal: NA, intVal: 0'>Failed</td>"
+  + "</tr>"
+  + "</table>"
+  + "<li>"
+  + "Note that you can't make a property without a getter (thus no 'setter only' class)"
+  + "</li>"
+  + "</li>"
+  + "<li>"
+  + "From the data we can see several patterns and make some conclusions:"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code private'>Private</strong> <strong class='code field'>Fields</strong> "
+  + "Only succeeded when a <strong class='code dclr-c'>JsonInclude</strong> <strong class='attributes'>attribute</strong> "
+  + "was given to the class fields"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code private'>Private</strong> <strong class='code property'>Properties</strong> "
+  + "Only succeeded when a <strong class='code dclr-c'>JsonInclude</strong> <strong class='attributes'>attribute</strong> "
+  + "was given to the class fields"
+  + "</li>"
+  + "<li>"
+  + "We can conclude that when a variable is <strong class='code private'>Private</strong> "
+  + "then the class needs a <strong class='code dclr-c'>JsonInclude</strong> "
+  + "<strong class='attributes'>attribute</strong> to be added to the variables for serialization to succeed"
+  + "</li>"
+  + "<li>"
+  + "A <strong class='code'><span class='private'>Private</span> <span class='field'>Field</span></strong> "
+  + "can be successfully serialized just by including the <strong class='code options'>IncludeFields Options Flag</strong>"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code property'><span class='public'>Public</span> Properties</strong> will always "
+  + "succeed to serialize and deserialize if both getter and setter properties are set"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code property'><span class='public'>Public</span> Properties</strong> will "
+  + "fail to deserialize if they are not given a setter"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r15-5b'><em>Installing the <Strong class='dclr-c code'>JsonSerializer</strong> class</em></h5>"
   + "<p>"
   + "In older <strong>.Net Framework</strong> projects the <strong class='code'>System.Text.Json</strong> "
   + "package may not be installed or included by default. You will need to manage your NuGet "
@@ -9395,7 +9737,10 @@
                       <h3><a href="#r15-5"><em>The <Strong class='dclr-c code'>JsonSerializer</strong> class</em></a></h3>
                     </li>
                     <li>
-                      <h3><a href="#r15-5a"><em>Installing the <Strong class='dclr-c code'>JsonSerializer</strong> class</em></a></h3>
+                      <h3><a href="#r15-5a"><em><Strong class='dclr-c code'>JsonSerializer</strong> class Examples</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r15-5b"><em>Installing the <Strong class='dclr-c code'>JsonSerializer</strong> class</em></a></h3>
                     </li>
                   </ul>
                   <!--end chapter/article list-->
