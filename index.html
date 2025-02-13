@@ -27,6 +27,20 @@
       --xaml-markup-el: darkred;
       --xaml-markup-att: red;
       --xaml-markup-text: blue;
+      
+      --html-markup-el: blue;
+      --html-markup-att: teal;
+      --html-markup-text: red;
+      --html-markup-comment: green;
+      
+      --rzpg-markup-kw: blue;
+      --rzpg-markup-comment: green;
+      --rzpg-markup-class: teal;
+      
+      --cli-cmd: limegreen;
+      --cli-cmd-bg: white;
+      --razor-keyword: blue;
+      --razor-class: teal;
     }
     header
     {
@@ -231,6 +245,41 @@
     {
       color: var(--try);
     }
+    
+    .rzp-kw,
+    .rzp_kw,
+    .rzpkw,
+    .rzp,
+    .razorpg,
+    .razor-page-keyword,
+    .rz-kw,
+    .rz_kw,
+    .rzkw,
+    .rz,
+    .razor,
+    .razor-keyword
+    {
+      color: var(--razor-keyword);
+    }
+    
+    .razor-pages-class,
+    .razor-class,
+    .rzpg-c,
+    .rzp-c,
+    .rz-c,
+    .rzpgc,
+    .rzpc,
+    .rzc
+    {
+      color: var(--razor-class);
+    }
+     
+    .cli
+    {
+      color: var(--cli-cmd);
+      background-color: var(--cli-cmd-bg);
+    }
+    
     /* XAML text coloring */
     ::highlight(xaml-markup-el)
     {
@@ -245,6 +294,40 @@
       color: var(--xaml-markup-text);
     }
     /*END XAML TEXT COLORING*/
+    
+    /* HTML text coloring */
+    ::highlight(html-markup-el)
+    {
+      color: var(--html-markup-el);
+    }
+    ::highlight(html-markup-att)
+    {
+      color: var(--html-markup-att);
+    }
+    ::highlight(html-markup-text)
+    {
+      color: var(--html-markup-text);
+    }
+    ::highlight(html-markup-comment)
+    {
+      color: var(--html-markup-comment);
+    }
+    /*END HTML TEXT COLORING*/
+    
+    /* RZPG text coloring */
+    ::highlight(rzpg-markup-kw)
+    {
+      color: var(--rzpg-markup-kw);
+    }
+    ::highlight(rzpg-markup-class)
+    {
+      color: var(--rzpg-markup-class);
+    }
+    ::highlight(rzpg-markup-comment)
+    {
+      color: var(--rzpg-markup-comment);
+    }
+    /*END RZPG TEXT COLORING*/
     
     .txt-red,
     .red
@@ -324,6 +407,7 @@
   {
     console.log("Browser does not support Highlight API.");
     console.log("XAML code will not be highlighted.");
+    console.log("HTML code will not be highlighted.");
   }
   
   //set up highlights:
@@ -349,7 +433,6 @@
   {
     //get the text node:
     text_body = el.firstChild;
-    console.log(text_body);
     //match all elements
     text_body.textContent.matchAll(/<\/*([^>\s]+)/g, "d").forEach( 
       (item)=> {
@@ -381,8 +464,6 @@
         
         //add range to elements highlight
         xaml_att_hl.add(range);
-      console.log(item);
-      console.log(item.index);
     });
     
     //match all 'strings'
@@ -397,11 +478,403 @@
         
         //add range to elements highlight
         xaml_str_hl.add(range);
-      console.log(item);
-      console.log(item.index);
     });
   }
   //END FUNC SET XAML HIGHLIGHTS
+  
+  
+  //set up highlights:
+  //HTML HIGHLIGHTS
+  const html_highlights = [];//not strictly needed
+  const html_el_hl = new Highlight();
+  //add to list (not strictly necessary)
+  html_highlights.push(html_el_hl);
+  //register highlight under css name
+  CSS.highlights.set('html-markup-el', html_el_hl);
+  
+  const html_att_hl = new Highlight();
+  html_highlights.push(html_att_hl);
+  CSS.highlights.set('html-markup-att', html_att_hl);
+  
+  const html_str_hl = new Highlight();
+  html_highlights.push(html_str_hl);
+  CSS.highlights.set('html-markup-text', html_str_hl);
+  
+  const html_comment_hl = new Highlight();
+  html_highlights.push(html_comment_hl);
+  CSS.highlights.set('html-markup-comment', html_comment_hl);
+  //END HTML HIGHLIGHTS
+  
+  //FUNC add html text to html highlights (ie highlight given el's text)
+  function setHTMLHighlights(el)
+  {
+    //get the text node:
+    text_body = el.firstChild;
+    
+    //match all elements
+    text_body.textContent.matchAll(/(<\/*[^>\s]+)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+          
+        range.setStart(text_body, tmp_index);
+        range.setEnd(  text_body, tmp_index + item[1].length);
+        
+        //add range to elements highlight
+        html_el_hl.add(range);
+    });
+    
+    //match all element butts
+    text_body.textContent.matchAll(/(\/*>)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+          
+        range.setStart(text_body, tmp_index);
+        range.setEnd(  text_body, tmp_index + item[1].length);
+        
+        //add range to elements highlight
+        html_el_hl.add(range);
+    });
+      
+    //match all attributes
+    text_body.textContent.matchAll(/([^<>\s="]+)=/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;;
+          
+        range.setStart(text_body, tmp_index);
+        range.setEnd(  text_body, tmp_index + item[1].length);
+        
+        //add range to elements highlight
+        html_att_hl.add(range);
+    });
+      
+    //match all <!DOCTYPE> els
+    text_body.textContent.matchAll(/(<!DOCTYPE[^>]+>)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;;
+          
+        range.setStart(text_body, tmp_index);
+        range.setEnd(  text_body, tmp_index + item[1].length);
+        
+        //add range to elements highlight
+        html_att_hl.add(range);
+    });
+    
+    //match all 'strings'
+    text_body.textContent.matchAll(/("[^"]*")/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;;
+          
+        range.setStart(text_body, tmp_index);
+        range.setEnd(  text_body, tmp_index + item[1].length);
+        
+        //add range to elements highlight
+        html_str_hl.add(range);
+    });
+    
+    //match all 'comments'
+    text_body.textContent.matchAll(/(<!--[^>]+-->)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;;
+          
+        range.setStart(text_body, tmp_index);
+        range.setEnd(  text_body, tmp_index + item[1].length);
+        
+        //add range to elements highlight
+        html_comment_hl.add(range);
+    });
+  }
+  //END FUNC SET HTML HIGHLIGHTS
+  
+  
+  //set up highlights:
+  //RZPG HIGHLIGHTS
+  const rzpg_highlights = [];//not strictly needed
+  const rzpg_kw_hl = new Highlight();
+  //add to list (not strictly necessary)
+  html_highlights.push(rzpg_kw_hl);
+  //register highlight under css name
+  CSS.highlights.set('rzpg-markup-kw', rzpg_kw_hl);
+  //set priority
+  rzpg_kw_hl.priority  = 0;
+  
+  const rzpg_class_hl = new Highlight();
+  rzpg_highlights.push(rzpg_class_hl);
+  CSS.highlights.set('rzpg-markup-class', rzpg_class_hl);
+  //set priority
+  rzpg_class_hl.priority  = 0;
+  
+  const rzpg_comment_hl = new Highlight();
+  rzpg_highlights.push(rzpg_comment_hl);
+  CSS.highlights.set('rzpg-markup-comment', rzpg_comment_hl);
+  //set priority
+  rzpg_comment_hl.priority  = 1;
+  //END RZPG HIGHLIGHTS
+  
+  //FUNC add rzpg text to rzpg highlights (ie highlight given el's text)
+  function setRZPGHighlights(el)
+  {
+    //get the text node:
+    text_body = el.firstChild;
+    
+    //match all Keywords (just the @ at beginning of doc)
+    text_body.textContent.matchAll(/^(@)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+          
+        range.setStart(text_body, tmp_index);
+        range.setEnd(  text_body, tmp_index + item[1].length);
+        
+        //add range to elements highlight
+        rzpg_kw_hl.add(range);
+    });
+    
+    //match all Keywords (just the @ at beginning of new lines/newlines with space)
+    //text_body.textContent.matchAll(/\n\s*(@)/g, "d").forEach( //old, may go back to if new fails
+    text_body.textContent.matchAll(/\n\s*\S*(@)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+        
+        //index is start of matching, so need to go from back since
+        //we are only matching the single @ char and will have a 
+        //bunch of spaces messing up the index start (maybe)
+        range.setStart(text_body, tmp_index + item[0].length - 1);
+        range.setEnd(  text_body, tmp_index + item[0].length);
+        
+        //add range to elements highlight
+        rzpg_kw_hl.add(range);
+    });
+    
+    //match keywords (can add more words to this list with OR operator (ie. ->| ))
+    text_body.textContent.matchAll(/(@page|@model|@namespace|@addTagHelper)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+        
+        range.setStart(text_body, tmp_index);
+        range.setEnd(  text_body, tmp_index + item[1].length);
+        
+        //add range to elements highlight
+        rzpg_kw_hl.add(range);
+    });
+    
+    //match  starting part of @{...}
+    text_body.textContent.matchAll(/(@\{)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+        
+        range.setStart(text_body, tmp_index);
+        range.setEnd(  text_body, tmp_index + item[1].length);
+        
+        //add range to elements highlight
+        rzpg_kw_hl.add(range);
+    });
+    
+    //match  trailing end part of @{...}
+    text_body.textContent.matchAll(/@\{[^\}]+(\})/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+        
+        range.setStart(text_body, tmp_index + item[0].length - 1);
+        range.setEnd(  text_body, tmp_index + item[0].length);
+        
+        //add range to elements highlight
+        rzpg_kw_hl.add(range);
+    });
+      
+    //match all using statements
+    text_body.textContent.matchAll(/(@using\s[^\n]+)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+          
+        range.setStart(text_body, tmp_index);
+        range.setEnd(  text_body, tmp_index + item[1].length);
+        
+        //add range to elements highlight
+        rzpg_class_hl.add(range);
+    });
+    
+    //match all model classes, @page instructions, etc that aren't classes/methods
+    text_body.textContent.matchAll(/@[^\.\(\)\s\n]+[^\S\n]+([^\n]+)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+          
+        range.setStart(text_body, tmp_index + item[0].length - item[1].length);
+        range.setEnd(  text_body, tmp_index + item[0].length);
+        
+        //add range to elements highlight
+        rzpg_class_hl.add(range);
+    });
+    
+    //match all 'comments' that don't have a * in them 
+    text_body.textContent.matchAll(/(@\*[^\*]*\*@)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+          
+        range.setStart(text_body, tmp_index);
+        range.setEnd(  text_body, tmp_index + item[1].length);
+        
+        //add range to elements highlight
+        rzpg_comment_hl.add(range);
+    });
+    
+    //match all 'comments' that don't have a @ in them 
+    text_body.textContent.matchAll(/(@\*[^@]*\*@)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+          
+        range.setStart(text_body, tmp_index);
+        range.setEnd(  text_body, tmp_index + item[1].length);
+        
+        //add range to elements highlight
+        rzpg_comment_hl.add(range);
+    });
+    //DVDVDVDVDVDVDVDVDV these comment matches for @*...*@ are imperfect and will fail if there are
+    //both * or @ in the commented sections should try to find a better way that searches for 
+    //and captures anything that is not *@ but stops when it hits *@ (because [] doesn't care
+    //about order and we need to match a pattern, not just a single symbol like > for html
+    
+    //match all "//" C# like 'comments' in a @{}    //dvdvdvdv right now only matches the first comment
+    text_body.textContent.matchAll(/@\{[^\}\/]*(\/\/[^\n]*)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+        
+        //another to match from back
+        range.setStart(text_body, tmp_index + item[0].length - item[1].length);
+        range.setEnd(  text_body, tmp_index + item[0].length);
+        
+        //add range to elements highlight
+        rzpg_comment_hl.add(range);
+    });
+    //following code blocks an imperfect method to match up to five single line comments
+    //match next #2 single lined comment comment
+    text_body.textContent.matchAll(/@\{[^\}\/]*\/\/[^\n]*[^\}\/]*(\/\/[^\n]*)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+        
+        //another to match from back
+        range.setStart(text_body, tmp_index + item[0].length - item[1].length);
+        range.setEnd(  text_body, tmp_index + item[0].length);
+        
+        //add range to elements highlight
+        rzpg_comment_hl.add(range);
+    });
+    //match next #3 single lined comment comment
+    ////////////////////////////////// [................*
+    text_body.textContent.matchAll(/@\{[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*(\/\/[^\n]*)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+        
+        //another to match from back
+        range.setStart(text_body, tmp_index + item[0].length - item[1].length);
+        range.setEnd(  text_body, tmp_index + item[0].length);
+        
+        //add range to elements highlight
+        rzpg_comment_hl.add(range);
+    });
+    //match next #4 single lined comment comment
+    ////////////////////////////////// [................* (copy pattern below <- section to capture one more single line comment)
+    text_body.textContent.matchAll(/@\{[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*(\/\/[^\n]*)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+        
+        //another to match from back
+        range.setStart(text_body, tmp_index + item[0].length - item[1].length);
+        range.setEnd(  text_body, tmp_index + item[0].length);
+        
+        //add range to elements highlight
+        rzpg_comment_hl.add(range);
+    });
+    //match next #5 single lined comment comment
+    ////////////////////////////////// [................*
+    text_body.textContent.matchAll(/@\{[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*(\/\/[^\n]*)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+        
+        //another to match from back
+        range.setStart(text_body, tmp_index + item[0].length - item[1].length);
+        range.setEnd(  text_body, tmp_index + item[0].length);
+        
+        //add range to elements highlight
+        rzpg_comment_hl.add(range);
+    });
+    //END MATCHING SINGLE LINED COMMENTS (UP TO 5)
+    
+    //multi line comments has similar issues to both the above single line comment and normal razor multi
+    //line comments, so we will only try our best to capture just one (the last one)
+   //match all "/* */" C# like 'comments' in a @{} (this one works for comments w/out star (*) )
+    text_body.textContent.matchAll(/@\{[^\}]*(\/\*[^\*]*\*\/)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+        
+        //another to match from back
+        range.setStart(text_body, tmp_index + item[0].length - item[1].length);
+        range.setEnd(  text_body, tmp_index + item[0].length);
+        
+        //add range to elements highlight
+        rzpg_comment_hl.add(range);
+    });
+   //match all "/* */" C# like 'comments' in a @{} (this one works for comments w/out slash (/) )
+    text_body.textContent.matchAll(/@\{[^\}]*(\/\*[^\/]*\*\/)/g, "d").forEach( 
+      (item)=> {
+        //create range of the text of element from match
+        const range = new Range();
+        tmp_index = item.index;
+        
+        //another to match from back
+        range.setStart(text_body, tmp_index + item[0].length - item[1].length);
+        range.setEnd(  text_body, tmp_index + item[0].length);
+        
+        //add range to elements highlight
+        rzpg_comment_hl.add(range);
+    });
+    //END CAPTURE A MULTI LINE COMMENT
+    //Note, you could probably capture two multi-line comments (MLC) if you have one with a slash in it
+    //and one with a start in it, but if you have a MLC with neither, both will target that single 
+    //MLC and you will only be able to capture one MLC
+    
+  }
+  //END FUNC SET RZPG HIGHLIGHTS
   
   function add_note(note)
   {
@@ -8633,6 +9106,1695 @@
   );
   //END R15 (reading 11)
   
+  //W06
+  add_note("<h2 id='w06'>Week 06</h2>");
+  
+  //R16-0 (later insert)
+  add_note("<h3 id='r16-0'><em>Assignment Introduction</em></h3>"
+  + "<h4 id='r16-0a'><em>ASP.NET Core Razor Pages</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "<strong>ASP.NET</strong> is an open source server-side framework"
+  + "</li>"
+  + "<li>"
+  + "<strong>ASP.NET</strong> supports any language .NET supports"
+  + "</li>"
+  + "<li>"
+  + "<strong>ASP.NET</strong> works similarly to PHP and other server-side frameworks"
+  + "</li>"
+  + "<li>"
+  + "<strong>ASP.NET</strong> pages are processed server-side and code is embedded in "
+  + "the HTML Structure"
+  + "</li>"
+  + "<li>"
+  + "<strong>ASP.NET</strong> is based on the .NET framework which has a larger scope "
+  + "than other web-specific frameworks"
+  + "</li>"
+  + "<li>"
+  + "<strong>ASP.NET</strong> extends the .NET developer platform with specific "
+  + "tools and libraries for building web apps"
+  + "</li>"
+  + "</ul>"
+  );
+  //END R16-0 (later insert)
+  
+  //R16 (reading 12)
+  add_note("<h3 id='r16'>Article: <em>Overview of ASP.NET Core</em></h3>"
+  + "<ul>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-2.2"
+  + "'>learn.micorsoft.com</a>"
+  + "</li>"
+  + "<li>"
+  + "<strong>ASP.NET:</strong>"
+    + "<ul>"
+    + "<li>"
+    + "An Open-Source Framework"
+    + "</li>"
+    + "<li>"
+    + "Cross-Platform"
+    + "</li>"
+    + "<li>"
+    + "High-Performance"
+    + "</li>"
+    + "<li>"
+    + "Cloud Apps"
+    + "</li>"
+    + "<li>"
+    + "Internet-Connected Apps"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "ASP.NET Capable of:"
+    + "<ul>"
+    + "<li>"
+    + "Web Apps and Services"
+    + "</li>"
+    + "<li>"
+    + "Internet of Things (IoT) apps"
+    + "</li>"
+    + "<li>"
+    + "Mobile Backends"
+    + "</li>"
+    + "<li>"
+    + "Compatible with Dev. Tools on Windows, MacOS, and Linux"
+    + "</li>"
+    + "<li>"
+    + "Runs on .NET Core and .NET Framework"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r16-1'><em>Why choose ASP.NET Core?</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "<strong>ASP.NET 4.x</strong> is a popular framework for creating web apps"
+  + "</li>"
+  + "<li>"
+  + "<strong>ASP.NET Core</strong> is a redesign of ASP.NET 4.x that makes it "
+  + "\"leaner\" and more modular"
+  + "</li>"
+  + "<li>"
+  + "ASP.NET Core features and benefits:"
+    + "<ul>"
+    + "<li>"
+    + "Unified building of web UI and web APIs"
+    + "</li>"
+    + "<li>"
+    + "Made for testability"
+    + "</li>"
+    + "<li>"
+    + "<strong>Razor Pages</strong> framework for coding \"page-focused\", ie. a "
+    + "coding framework which allows coding a single page and the dynamic logic for "
+    + "the page in one file"
+    + "</li>"
+    + "<li>"
+    + "<strong>Blazor</strong> frontend web framework which can be used for both "
+    + "client and server-side coding and use of both JavaScript and C#"
+    + "</li>"
+    + "<li>"
+    + "Can develop and run on Windows, MacOS, and Linux"
+    + "</li>"
+    + "<li>"
+    + "Open-source/Community-focused"
+    + "</li>"
+    + "<li>"
+    + "Has integration of client-side frameworks with development workflows"
+    + "</li>"
+    + "<li>"
+    + "<strong>gRPC</strong> supports hosting <strong>Remote Procedure Call (RPC)</strong>"
+    + "</li>"
+    + "<li>"
+    + "Configuration system is Environment-based and able to support Cloud architecture"
+    + "</li>"
+    + "<li>"
+    + "\"Dependency Injection\" is built-in"
+    + "</li>"
+    + "<li>"
+    + "HTTP request pipeline boasts to be lightweight, high-performance, and modular"
+    + "</li>"
+    + "<li>"
+    + "\"Side-by-Side Versioning\""
+    + "</li>"
+    + "<li>"
+    + "\"Tooling\" that simplifies web dev."
+    + "</li>"
+    + "<li>"
+    + "Ability to host on:"      
+      + "<ul>"
+      + "<li>"
+      + "Kestrel"
+      + "</li>"
+      + "<li>"
+      + "IIS"
+      + "</li>"
+      + "<li>"
+      + "HTTP.sys"
+      + "</li>"
+      + "<li>"
+      + "Nginx"
+      + "</li>"
+      + "<li>"
+      + "Docker"
+      + "</li>"
+      + "</ul>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r16-2'><em>Build web APIs and web UI using ASP.NET Core MVC</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Supports <strong>Model-View-Controller (MVC)</strong> pattern"
+  + "</li>"
+  + "<li>"
+  + "<strong>Razor Pages</strong> helps speed website development"
+  + "</li>"
+  + "<li>"
+  + "<strong>Tag Helpers</strong> help server-side code to develop dynamic pages"
+  + "</li>"
+  + "<li>"
+  + "Supports servicing multiple client types, including mobile devices"
+  + "</li>"
+  + "<li>"
+  + "<strong>Model Binding</strong> auto-maps HTTP request data to action function method parameters"
+  + "</li>"
+  + "<li>"
+  + "<strong>Model Validation</strong> auto-validates client-side and server-side"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r16-3'><em>Client-side development</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Integrates with popular client-side frameworks and libraries including:"
+    + "<ul>"
+    + "<li>"
+    + "Blazor"
+    + "</li>"
+    + "<li>"
+    + "Angular"
+    + "</li>"
+    + "<li>"
+    + "React"
+    + "</li>"
+    + "<li>"
+    + "Vue"
+    + "</li>"
+    + "<li>"
+    + "Bootstrap"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r16-4'><em>ASP.NET Core targeting .NET Framework</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "ASP.NET Core 2.x apps can target both .NET Core or .NET Framework"
+  + "</li>"
+  + "<li>"
+  + "ASP.NEET CORE apps targeting .NET Framework only run on windows (not cross-platform)"
+  + "</li>"
+  + "<li>"
+  + "Libraries written with .NET Standard 2.0 run on any platform that implements the standard"
+  + "</li>"
+  + "<li>"
+  + ".NET Framework versions that implement .NET Standard 2.0 can support ASP.NET Core 2.x"
+    + "<ul>"
+    + "<li>"
+    + "Recommended .NET Framework 4.6.1 or latest version"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "ASP.NET Core 3.0 and later only run on .NET Core"
+  + "</li>"
+  + "</ul>"
+  );
+  //END R16 (Reading 12)
+  
+  //R17 (reading 12)
+  add_note("<h3 id='r17'>Article: <em>Choose between ASP.NET 4.x and ASP.NET Core</em></h3>"
+  + "<p>Differences between ASP.NET 4.x and its redesign, ASP.NET Core.</p>"
+  + "<ul>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/choose-aspnet-framework?view=aspnetcore-2.2"
+  + "'>learn.microsoft.com</a>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r17-1'><em>ASP.NET Core</em></h4>"
+  + "<p>"
+  + "See list \"ASP.NET Core features and benefits:\" under <a href='#r16-1'>Why choose ASP.NET Core?</a>"
+  + "</p>"
+  
+  + "<h5 id='r17-2'><em>ASP.NET 4.x</em></h5>"
+  + "<p>"
+  + "A \"Mature\" framework that can provide services for enterprise-grade server-based "
+  + "web apps on Windows."
+  + "</p>"
+  + "<ul>"
+  + "<li>"
+  + "Table: ASP.NET Core Vs ASP.NET 4.x"
+  + "<table>"
+  + "<tr>"
+  + "<th>ASP.NET Core</th><th>ASP.NET 4.x</th>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Windows, macOS, or Linux</td>"
+  + "<td>Windows only</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Razor Pages recommended for Web UI as of ASP.NET Core 2.x. MVC, Web API, and SignalIR compatible</td>"
+  + "<td>Use Web Forms, SignalIR, MVC, Web API, WebHooks, or Web Pages</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Multiple versions per machine</td>"
+  + "<td>Only one version per machine</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Compatible with IDEs VS, VS for Mac, and VS Code with C# or F#</td>"
+  + "<td>COmpatible with VS using C#, VB, or F#</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Performs better thatn ASP.NET 4.x</td>"
+  + "<td>\"Good performance\"</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Use .Net Core runtime</td>"
+  + "<td>Use .Net Framework runtime</td>"
+  + "</tr>"
+  + "</table>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r17-3'><em>ASP.NET Core scenarios</em></h5>"
+  + "<p>"
+  + "ASP.NET Core tutorials:"
+  + "</p>"
+  + "<ul>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/start-mvc?view=aspnetcore-9.0&viewFallbackFrom=aspnetcore-2.2&tabs=visual-studio"
+  + "'>Websites (<em>Get started with ASP.NET Core MVC</em>)</a>"
+  + "</li>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-9.0&preserve-view=true&tabs=visual-studio"
+  + "'>APIs (<em>Tutorial: Create a web API with ASP.NET Core</em>)</a>"
+  + "</li>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-2.2"
+  + "'>Real-time (Overview of ASP.NET Core SignalR</em>)</a>"
+  + "</li>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/azure/app-service/quickstart-dotnetcore?tabs=net80&pivots=development-environment-vs"
+  + "'>Deploy an ASP.NET Core app to Azure (<em>Quickstart: Deploy an ASP.NET web app</em>)</a>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r17-4'><em>ASP.NET 4.x scenarios</em></h5>"
+  + "<p>"
+  + "ASP.NET 4.x tutorials:"
+  + "</p>"
+  + "<ul>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/mvc/"
+  + "'>Websites (<em>ASP.NET MVC</em>)</a>"
+  + "</li>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/web-api/"
+  + "'>APIs (<em>ASP.NET 4.x Web API</em>)</a>"
+  + "</li>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/signalr/"
+  + "'>Real-time (<em>SignalR</em>)</a>"
+  + "</li>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/azure/app-service/quickstart-dotnetcore?tabs=netframework48&pivots=development-environment-vs"
+  + "'>Create an ASP.NET 4.x web app in Azure (<em>Quickstart: Deploy an ASP.NET web app</em>)</a>"
+  + "</li>"
+  + "</ul>"
+  );
+  //END R17 (reading 12)
+  
+  //R18 (reading 12)
+  add_note("<h3 id='r18'>Article: <em>Introduction to Razor Pages in ASP.NET Core</em></h3>"
+  + "<ul>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/razor-pages/?view=aspnetcore-9.0&viewFallbackFrom=aspnetcore-2.2&tabs=visual-studio"
+  + "'>learn.microsoft.com</a>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r18-1'><em>Create a Razor Pages project</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "Visual Studio Code:"
+    + "<ul>"
+    + "<li>"
+    + "CLI Cmd: <strong class='code cli'>dotnet new webapp</strong>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Visual Studio"
+    + "<ul>"
+    + "<li>"
+    + "Select <strong>New project</strong>"
+    + "</li>"
+    + "<li>"
+    + "In the <strong>Create a new project</strong> dialogue box, search for or find "
+    + "in the scroll list then select the <strong>ASP.NET Core Web App (Razor Pages)</strong> "
+    + "option"
+    + "</li>"
+    + "<li>"
+    + "Click <strong>Next</strong>"
+    + "</li>"
+    + "<li>"
+    + "In the <strong>Configure your new project</strong> dialogue box, carefully name "
+    + "the project as it will be used for its namespace"
+    + "</li>"
+    + "<li>"
+    + "Click <strong>Next</strong>"
+    + "</li>"
+    + "<li>"
+    + "In the <strong> Additonal information</strong> dialogue box, make sure that:"
+      + "<ul>"
+      + "<li>"
+      + "<strong>.Net 9.0</strong> is selected for the <strong>Framework</strong>"
+      + "</li>"
+      + "<li>"
+      + "The <strong>Do not use top-level statements</strong> checkbox is <strong>"
+      + "un-checked</strong>"
+      + "</li>"
+      + "</ul>"
+    + "</li>"
+    + "<li>"
+    + "Click <strong>Create</strong>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-2'><em>Razor Pages</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "The <strong class='code'>Program.cs</strong> file contains the code that "
+  + "enables <strong>Razor Pages</strong>"
+  + "</li>"
+  + "<li>"
+  + "Both methods of starting a project will start you with the same exact code "
+  + "in you <strong class='code'>Program.cs</strong> file"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code'>Program.cs</strong> starter code:"
+  + "<pre class='code'>"
+  + "<span class='dclr'>var</span> builder = <span class='dclr-c'>WebApplication</span>.CreateBuilder(args);\n"
+  + "\n"
+  + "<span class='comment'>// Add services to the container.</span>\n"
+  + "builder.Services.AddRazorPages();\n"
+  + "\n"
+  + "<span class='dclr'>var</span> app = builder.Build();\n"
+  + "\n"
+  + "<span class='comment'>// Configure the HTTP request pipeline.</span>\n"
+  + "<span class='if'>if</span> (!app.Environment.IsDevelopment())\n"
+  + "{\n"
+  + "    app.UseExceptionHandler(<span class='str'>\"/Error\"</span>);\n"
+  + "    <span class='comment'>// The default HSTS value is 30 days. You may want "
+  + "to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.</span>\n"
+  + "    app.UseHsts();\n"
+  + "}\n"
+  + "\n"
+  + "app.UseHttpsRedirection();\n"
+  + "\n"
+  + "app.UseRouting();\n"
+  + "\n"
+  + "app.UseAuthorization();\n"
+  + "\n"
+  + "app.MapStaticAssets();\n"
+  + "app.MapRazorPages()\n"
+  + "   .WithStaticAssets();\n"
+  + "\n"
+  + "app.Run();\n"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Note that it looks similar to a Node.js server (eg. <span class='code'>app.Run();</span>, etc.)"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code'><span class='dclr-c'>WebApplication</span>.CreateBuilder(args)</strong> "
+  + "returns an instance of the <strong class='code dclr-c'>WebApplicationBuilder</strong> class"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>WebApplicationBuilderInstance.Services.AddRazorPages()"
+  + "</strong> method adds Razor Pages services to the app"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>WebApplicationBuilderInstance.Build()</strong> method "
+  + "creates, configures, and returns the Web Application as an instance of the <strong class='code dclr-c'>"
+  + "WebApplication</strong> class"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>WebApplicationInstance.MapRazorPages()</strong> method "
+  + "adds \"endpoints\" for the razor pages to the <strong class='code dclr-c'>"
+  + "IEndpointRouteBuilder</strong>"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code dclr-c'>IEndpointRouteBuilder</strong> is an interface used to "
+  + "\"define a contract for a route builder\""
+  + "</li>"
+  + "<li>"
+  + "<strong>Route Builders</strong> define or specifies the routes for an application"
+  + "</li>"
+  + "<li>"
+  + "<strong>Razor Page</strong> files are different from <strong>Razor View</strong> files"
+  + "</li>"
+  + "<li>"
+  + "<strong>Razor View</strong>"
+    + "<ul>"
+    + "<li>"
+    + "Razor Views are used in a typical <strong>Model View Controller (MVC)</strong> "
+    + "web application"
+    + "</li>"
+    + "<li>"
+    + "A specific Razor View is combined to a generic layout file to create a "
+    + "custom response that is then sent back to the client (similar to normal MVC)"
+    + "</li>"
+    + "<li>"
+    + "This process of selecting which view to use and handling the request is "
+    + "done by a </strong>Controller</strong>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "<strong>Razor Pages</strong> handle requests <em>directly</em> instead of using a controller"
+  + "</li>"
+  + "<li>"
+  + "A Razor page is created by placing the <strong class='code rzp-kw'>@page</strong> "
+  + "directive at the top of the page"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code rzpkw'>@page</strong> directive must be the first Razor "
+  + "directive on the page"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code rzpkw'>@page</strong> directive affects the behavior "
+  + "of other razor constructs"
+  + "</li>"
+  + "<li>"
+  + "Razor pages have the extension: <strong class='code'>.cshtml</strong>"
+  + "</li>"
+  + "<li>"
+  + "Eg. Razor Page:"
+  + "<pre class='code'>"
+  + "<span class='rzp'>@page</span>\n\n"
+  + "&lt;h1&gt; Welcome! &lt;/h1&gt;\n"
+  + "&lt;p&gt; Server time is now: <span class='rzkw'>@DateTime.Now</span>&lt;/p&gt;\n"
+  + "..."
+  + "</li>"
+  + "<li>"
+  + "You can also use a <strong class='code dclr-c'>PageModel</strong> with a Razor Page"
+  + "</li>"
+  + "<li>"
+  + "Using a <strong class='code dclr-c'>PageModel</strong> can separate logic out from a "
+  + "page which the Razor page can then access via an instance of the model"
+  + "</li>"
+  + "<li>"
+  + "The class for the <strong class='code dclr-c'>PageModel</strong> is kept in a "
+  + "<strong class='code'>.cs</strong> document"
+  + "</li>"
+  + "<li>"
+  + "Convention dictates that the filename for the class document be the "
+  + "full filename of the Razor Pages document (including file extension) with the "
+  + "<strong class='code'>.cs</strong> extension tacked on the end, eg.:<br>"
+  + "A Razor Page named:<br><strong class='code'>Index2.cshtml</strong><br>"
+  + "would have a companion <strong class='code dclr-c'>PageModel</strong> class "
+  + "<strong class='code'>.cs</strong> document named:<br><strong class='code'>"
+  + "Index2.cshtml.cs</strong>"
+  + "</li>"
+  + "<li>"
+  + "Both the Razor Page file and its companion <strong class='code dclr-c'>PageModel</strong> "
+  + "file are kept in the same <strong class='code'>/Pages</strong> directory"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>/Pages</strong> directory is by default the first directory "
+  + "where the runtime looks for Razor pages"
+  + "</li>"
+  + "<li>"
+  + "The URL link that a Razor Page is assigned to is determined by its filename, eg.:"
+  + "<table>"
+  + "<tr>"
+  + "<th>Path/Filename</th><th>URL</th>"
+  + "</tr>"
+  + "<tr class='code'>"
+  + "<td>/Pages/Index.cshtml</td>"
+  + "<td>/ or /Index</td>"
+  + "</tr>"
+  + "<tr class='code'>"
+  + "<td>/Pages/Contact.cshtml</td>"
+  + "<td>/Contact</td>"
+  + "</tr>"
+  + "<tr class='code'>"
+  + "<td>/Pages/Store/Contact.cshtml</td>"
+  + "<td>/Store/Contact</td>"
+  + "</tr>"
+  + "<tr class='code'>"
+  + "<td>/Pages/Store/Index.cshtml</td>"
+  + "<td>/Store or /Store/Index</td>"
+  + "</table>"
+  + "</li>"
+  + "<li>"
+  + "Note that similar to normal web server rules, the <strong class='code'>"
+  + "Index</strong> page is default served if no other page matches the request"
+  + "</li>"
+  + "<li>"
+  + "Eg. a Razor Page <strong class='code'>Index2.cshtml</strong> using the "
+  + "<strong class='code dclr-c'>PageModel</strong>:"
+  + "<pre class='code'>"
+  + "<span class='rzp'>@page</span>\n"
+  + "<span class='comment'>@*give namespace to find the model*@</span>\n"
+  + "<span class='rzp-c'>@using RazorPagesIntro.Pages</span>\n"
+  + "<span class='comment'>@*create an instance of the model*@</span>\n"
+  + "<span class='rzp-kw'>@model</span> <span class='rzp-c'>Index2Model</span>\n\n"
+  + "&lt;h2&gt;Separate page model&lt;/h2&gt;\n"
+  + "&lt;p&gt;\n"
+  + "  <span class='comment'>&lt;!--call and print the message from the model--&gt;</span>\n"
+  + "  <span class='rz'>@</span>Model.Message\n"
+  + "&lt;/p&gt;"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Eg. the companion <strong class='code'>.cs</strong> file that contains the "
+  + "<strong class='code dclr-c'>PageModel</strong>:"
+  + "<pre class='code'>"
+  + "<span class='using'>using</span> Microsoft.AspNetCore.Mvc.RazorPages;\n"
+  + "<span class='using'>using</span> Microsoft.Extensions.Logging;\n"
+  + "<span class='using'>using</span> System;\n\n"
+  + "<span class='kw'>namespace</span> <span class='dclr-c'>RazorPagesIntro.Pages</span>\n"
+  + "{\n"
+  + "  <span class='dclr'>public class</span> <span class='dclr-c'>Index2Model</span> "
+  + ": <span class='dclr-c'>PageModel</span>\n"
+  + "  {\n"
+  + "    <span class='dclr'>public string</span> Message{ <span class='gttr'>get</span>; "
+  + "<span class='dclr'>private</span> <span class='sttr'>set</span>; } = <span class='str'>"
+  + "\"PageModel in C#\"</span>;\n\n"
+  + "    <span class='dclr-c'>public void</span> OnGet()\n"
+  + "    {\n"
+  + "      Message += <span class='str'>$\"Server time is </span>{DateTime.Now}<span class='str'>\"</span>;\n"
+  + "    }\n"
+  + "  }\n"
+  + "}\n"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "<strong>Razor Comments</strong>"
+    + "<ul>"
+    + "<li>"
+    + "There are several ways to make comments on a Razor Page:"
+    + "</li>"
+    + "<li>"
+    + "Use <strong class='code comment'>@* *@</strong> to leave a comment "
+    + "anywhere on the page, eg.:"
+    + "<pre class='code'>"
+    + "<span class='rzp'>@page</span>\n"
+    + "<span class='comment'>@*This is a comment*@</span>\n"
+    + "...\n"
+    + "<span class='comment'>@*This is a\n"
+    + "multi-line comment*@</span>\n"
+    + "</pre>"
+    + "</li>"
+    + "<li>"
+    + "You can use normal C# comments in a code block, eg.:"
+    + "<pre class='code'>"
+    + "<span class='rzp'>@page</span>\n"
+    + "<span class='rzp'>@{</span>\n"
+    + "  <span class='comment'>//This is a single line comment</span>\n"
+    + "  <span class='comment'>/*This is a\n"
+    + "  multi-line comment*/</span>\n"
+    + "<span class='rzp'>}</span>\n"
+    + "..."
+    + "</pre>"
+    + "</li>"
+    + "<li>"
+    + "As the rest of the page and html will be sent with the request, normal "
+    + "html comments may be used, eg:"
+    + "<pre class='code'>"
+    + "<span class='rzp'>@page</span>\n"
+    + "<span class='comment'>&lt;!--Use html comments as if you were just writing "
+    + "html--&gt;</span>\n"
+    + "</pre>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-3'><em>Write a basic form</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "When creating a companion class for your Razor Page, convention dictates "
+  + "that you name it after the page name in the URL and add the suffix <strong>\""
+  + "Model\"</strong>, eg.:<br>"
+  + "A model for the <strong class='code'>Pages/Customers/Create</strong> URL would "
+  + "be called:<br>"
+  + "<strong class='code dclr-c'>CreateModel</strong>"
+  + "</li>"
+  + "<li>"
+  + "These \"model\" classes can inherit from the <strong class='code dclr-c'>PageModel"
+  + "</strong> class"
+  + "</li>"
+  + "<li>"
+  + "Using the <strong class='code dclr-c'>PageModel</strong> class helps to separate "
+  + "components of the page's logic (similar to the MVC server model)"
+  + "</li>"
+  + "<li>"
+  + "While called a \"Model\" and similar to MVC this is not the same as an MVC <em>model</em>, "
+  + "and actually functions more like an MVC <em>controller</em>"
+  + "</li>"
+  + "<li>"
+  + "Controller/Model classes have <strong>Handler Methods</strong> which are "
+  + "called depending on the different requests, eg.:"
+    + "<ul>"
+    + "<li>"
+    + "<strong class='code'>OnGet()</strong> method handles <strong class='code'>GET"
+    + "</strong> requests"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>OnPost()</strong> method handles <strong class='code'>POST"
+    + "</strong> requests"
+    + "</li>"
+    + "<li>"
+    + "By convention Asynchronous Functions use the (optional) suffix of <strong class='code'>"
+    + "Async</strong> eg.: <strong class='code'>OnPostAsync()</strong>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "You can use attributes to do client side validation:"
+    + "<ul>"
+    + "<li>"
+    + "Eg. Consider the following <strong class='code dclr-c'>Customer</strong> class:"
+    + "<pre class='code'>"
+    + "<span class='using'>using</span> System.ComponentModel.DataAnnotations;\n\n"
+    + "<span class='kw'>namespace</span> <span class='dclr-c'>RazorPagesContacts.Models</span>\n"
+    + "{\n"
+    + "  <span class='dclr'>public class</span> <span class='dclr-c'>Customer</span>\n"
+    + "  {\n"
+    + "    <span class='dclr'>public int</span> Id{ <span class='gttr'>get</span>; "
+    + "<span class='sttr'>set</span>; }\n\n"
+    + "    [<span class='dclr-c'>Required, StringLength(10)</span>]\n"
+    + "    <span class='dclr'>public string</span>? Name{ <span class='gttr'>get</span>; "
+    + "<span class='sttr'>set</span>; }\n"
+    + "  }\n"
+    + "}"
+    + "</pre>"
+    + "</li>"
+    + "<li>"
+    + "Note that the <strong class='code'>[<span class='dclr-c'>Required, "
+    + "StringLength(10)</span>]</strong> attribute sets requirements for this property"
+    + "</li>"
+    + "<li>"
+    + "Next consider the Razor Page created for submitting data for the previous class' "
+    + "<strong class='code'>Name</strong> property:"
+    + "<pre class='code html'>"
+    + "<span class='rzp'>@page</span>\n"
+    + "<span class='rzp-c'>@model RazorPagesContacts.Pages.Customers.CreateModel</span>\n"
+    + "<span class='rzp'>@addTagHelper</span> <span class='rzp-c'>*, Microsoft.AspNetCore.Mvc.TagHelpers</span>\n\n"
+    + "<span class='html'>&lt;p&gt;\n"
+    + "  Enter a customer name:\n"
+    + "&lt;/p&gt;\n\n"
+    + "&lt;form method=\"post\"&gt;\n"
+    + "  Name:\n"
+    + "  &lt;input asp-for=\"Customer!.Name\" /&gt;\n"
+    + "  &lt;input type=\"submit\"/&gt;\n"
+    + "&lt;/form&gt;</span>"
+    + "</pre>"
+    + "</li>"
+    + "<li>"
+    + "Note the input element with the attribute "
+    + "<strong class='code html'>asp-for=\"Customer!.Name\"</strong> which tells "
+    + "the web app to automatically add client-side validation attributes to the "
+    + "element for the given <strong class='code'>Customer.Name</strong> property"
+    + "</li>"
+    + "<li>"
+    + "This attribute is called a <strong>Tag Helper</strong>"
+    + "</li>"
+    + "<li>"
+    + "Tag helpers are made available by the <strong class='code rz'>@addTagHelper"
+    + "</strong> directive"
+    + "</li>"
+    + "<li>"
+    + "You can see its effect when you look at the HTML code received by the client:"
+    + "<pre class='code html'>"
+    + "&lt;p&gt;Enter a customer name:&lt;/p&gt;\n\n"
+    + "&lt;form method=\"post\"&gt;\n"
+    + "  Name:\n"
+    + "  &lt;input type=\"text\" data-val=\"true\"\n"
+    + "    data-val-length=\"The field Name must be a string with a maximum length of 10.\"\n"
+    + "    data-val-length-max=\"10\" data-val-required=\"The Name field is required.\"\n"
+    + "    id=\"Customer_Name\" maxlength=\"10\" name=\"Customer.Name\" value=\"\" /&gt;\n"
+    + "  &lt;input type=\"submit\" /&gt;\n"
+    + "  &lt;input name=\"__RequestVerificationToken\" type=\"hidden\"\n"
+    + "    value=\"&lt;Antiforgery token here&gt;\" /&gt;\n"
+    + "&lt;/form&gt;"
+    + "</pre>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code dclr-c'>PageModel</strong> properties can be given "
+  + "a <strong class='code'>[<span class='dclr-c'>BindProperty</span>]</strong> "
+  + "attribute which seems to take incoming <strong class='code'>POST</strong> "
+  + "data and bind it with that property's values or properties automatically (ie. it takes "
+  + "incoming request data and seems to match it with eg. a property instance's "
+  + "class properties to assign the request data values to the correct property or field"
+  + "</li>"
+  + "<li>"
+  + "This method of assigning properties values from the client is problematic as "
+  + "you do not have control as to which properties are assigned values"
+  + "</li>"
+  + "<li>"
+  + "Simply leaving out a field for user input for particular properties does not "
+  + "protect them from client side assignment"
+  + "</li>"
+  + "<li>"
+  + "A client could craft its own post data assigning values to those properties/fields "
+  + "which you were trying to protect (a vulnerability called <strong>Overposting</strong>)<br>"
+  + "REF: <a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/data/ef-rp/crud?view=aspnetcore-9.0#overposting"
+  + "'>learn.microsoft.com</a>"
+  + "</li>"
+  + "<li>"
+  + "The best way of assigning properties in the event you wish to keep some "
+  + "safe from client tampering is to "
+  + "instead use the <strong class='code'>TryUpdateModel()</strong> method"
+  + "</li>"
+  + "<li>"
+  + "By default Razor Pages do not bind properties on <strong class='code'>GET</strong> "
+  + "requests (for security purposes, likely because <span class='code'>GET</span> "
+  + "requests transfer data in the URL)"
+  + "</li>"
+  + "<li>"
+  + "You can \"Opt-in\" to binding a <span class='code'>GET</span> request to a property "
+  + "via the attribute's parameters:"
+  + "<pre class='code'>"
+  + "[<span class='dclr-c'>BindProperty(supportsGet = true)</span>]\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-4'><em>The home page</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "You can use several <strong>Tag Helpers</strong> together to have "
+  + "dynamically generated links"
+  + "</li>"
+  + "<li>"
+  + "Eg.:"
+  + "<pre class='code html razor-page'>"
+  + "&lt;a asp-page=\"./Edit\" asp-route-id=\"@contact.Id\"&gt;Edit&lt;/a&gt; "
+  + "</pre>"
+    + "<ul>"
+    + "<li>"
+    + "The <strong class='code rzp-c'>asp-page</strong> Tag Helper gives the base link value"
+    + "</li>"
+    + "<li>"
+    + "The <strong class='code rzp-c'>asp-route-{value}</strong> Tag Helper uses the value "
+    + "of the given object (<strong class='code'><span class='rz'>@</span>contact.Id</strong>) "
+    + "to dynamically add to the link"
+    + "</li>"
+    + "<li>"
+    + "Eg. if the value of <strong class='code'><span class='rz'>@</span>contact.Id</strong> "
+    + "was 1, then the generated link would be something like: <strong class='code'>"
+    + "https://localhost:5001/Edit/1</strong>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "<strong>Tag Helpers</strong> can also be used to dynamically generate the <strong class='code rzp-c'>"
+  + "formaction</strong> attribute of a submit button"
+  + "</li>"
+  + "<li>"
+  + "Eg.:"
+  + "<pre class='code html razor-page'>"
+  + "&lt;button type=\"submit\" asp-page-handler=\"delete\" asp-route-id=\"@contact.Id\"&gt;delete&lt;/button&gt;"
+  + "</pre>"
+    + "<ul>"
+    + "<li>"
+    + "The <strong class='code rzp-c'>asp-page-handler</strong> Tag helper selects "
+    + "the <strong class='code'>OnPostDeleteAsync()</strong> handler method of the model "
+    + "class that the formaction url targets"
+    + "</li>"
+    + "<li>"
+    + "The <strong class='code rzp-c'>asp-route-{value}</strong> Tag Helper performs as "
+    + "it previously did to give an id value to the URL"
+    + "</li>"
+    + "<li>"
+    + "It is assumed that the base URL of <strong class='code'>/Customers</strong> "
+    + "is default given because that is the URL of the current page (ie. seems to default "
+    + "target the current URL)"
+    + "</li>"
+    + "<li>"
+    + "The resulting submit element and its <strong class='code rz-c'>formaction</strong> "
+    + "attribute would look something like:"
+    + "<pre class='code html'>"
+    + "&lt;button type=\"submit\" formaction=\"/Customers?id=1&amp;handler=delete\"&gt;delete&lt;/button&gt;"
+    + "</pre>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-5'><em>The Edit.cshtml file</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "The <strong class='code rz'>@page</strong> directive can be given some "
+  + "instructions/options:"
+  + "<pre class='code'>"
+  + "<span class='rz'>@page</span> <span class='rz-c'>\"{id:int}\"</span>"
+  + "</pre>"
+  + "<ul>"
+  + "<li>"
+  + "The extra constraint tells the page to look for <strong class='code dclr'>"
+  + "int</strong> route data in the request URL"
+  + "</li>"
+  + "<li>"
+  + "If the data is not found then a 404 error is returned"
+  + "</li>"
+  + "<li>"
+  + "By adding a question mark (?) to the type you can make this data optional, ie.:"
+  + "<pre class='code'>"
+  + "<span class='rz'>@page</span> <span class='rz-c'>\"{id:int?}\"</span>"
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-6'><em>Validation</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Validation rules are <em>\"declaratively specified\"</em> in the model class"
+  + "</li>"
+  + "<li>"
+  + "This means that they are declared on a property ie. a validation rule "
+  + "is added to a property via a C# attribute (see previous examples in above sections)"
+  + "</li>"
+  + "<li>"
+  + "Validation rules are enforced throughout the app"
+  + "</li>"
+  + "<li>"
+  + "Validation attributes can be found in the <strong class='code'>System."
+  + "ComponentModel.DataAnnotations</strong> Namespace"
+  + "</li>"
+  + "<li>"
+  + "More validation attributes"
+  + "</li>"
+  + "<li>"
+  + "Require that a property must have a value:"
+  + "<pre class='code'>"
+  + "[<span class='dclr-c'>Required</span>]"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Some types are <em>inherently required</em> even without the "
+  + "required attribute, eg.: <strong class='code dclr'>decimal</strong>, "
+  + "<strong class='code dclr'>int</strong>, <strong class='code dclr'>float</strong>, "
+  + "and <strong class='code dclr'>DateTime</strong>"
+  + "</li>"
+  + "<li>"
+  + "Also enforces that a value is set, sets an (optional) min and max length:"
+  + "<pre class='code'>"
+  + "[<span class='dclr-c'>StringLength(60, MinimumLength = 3)</span>]"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Limit allowed characters via a Regular Expression, eg. force a capitalized or "
+  + "all caps word, do not allow anything but letters a-z:"
+  + "<pre class='code'>"
+  + "[<span class='dclr-c'>RegularExpression(<span class='str'>"
+  + "@\"^[A-Z]+[a-zA-Z\\s]*$\"</span>)</span>]"
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-7'><em>CSS isolation</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Global styles can be hard to maintain and cause issues with nested content"
+  + "</li>"
+  + "<li>"
+  + "CSS files should be named after the file they will target, eg.:<br>"
+  + "a CSS file for a page named <strong class='code'>Index.cshtml</strong> "
+  + "would be named <strong class='code'>index.cshtml.css</strong>"
+  + "</li>"
+  + "<li>"
+  + "The file is then placed with the file in the <strong class='code'>Pages</strong> "
+  + "or <strong class='code'>Views</strong> directory"
+  + "</li>"
+  + "<li>"
+  + "Eg. Contents of the example <strong class='code'>Pages/Index.cshtml.css</strong> file:"
+  + "<pre class='code'>"
+  + "h1\n"
+  + "{\n"
+  + "  color: red;\n"
+  + "}"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "At build time the framework performs the CSS Isolation by rewriting the CSS "
+  + "selectors to match the web apps pages and views"
+  + "</li>"
+  + "<li>"
+  + "The rewritten styles are bundled into a static sheet named <strong class='code'>"
+  + "YourAppAssemblyProjectName.styles.css</strong>"
+  + "</li>"
+  + "<li>"
+  + "A link to the stylesheet should be placed in the head of the apps main layout sheet"
+  + "</li>"
+  + "<li>"
+  + "The link to the sheet should look something like:"
+  + "<pre class='code html'>"
+  + "&lt;link rel=\"stylesheet\" href=\"YourAppAssemblyProjectName.styles.css\" /&gt;"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Scoped CSS (ie. css applied to only certain pages/views) is accomplished by "
+  + "using CSS attribute selectors with a random identification string "
+  + "(in the form of \"b-\" + 10 random characters)"
+  + "</li>"
+  + "<li>"
+  + "The scoped random identification string is then applied to the pertaining html "
+  + "elements as an attribute"
+  + "</li>"
+  + "<li>"
+  + "Eg. a scoped CSS rule in the CSS file:"
+  + "<pre class='code'>"
+  + "h1[b-3xxtam6d07]\n"
+  + "{\n"
+  + "  color: red;\n"
+  + "}"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Eg. the scoped attribute applied to the html element:"
+  + "<pre class='code html'>"
+  + "&lt;h1 b-3xxtam6d07&gt;"
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-8'><em>CSS preprocessor support</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "CSS Preprocessor support such as Sass or Less are not natively supported"
+  + "</li>"
+  + "<li>"
+  + "Preprocessors can be integrated into the build process but need to be run "
+  + "to compile the CSS before the framework rewrites it"
+  + "</li>"
+  + "<li>"
+  + "There are third-party NuGet packages that can compile SASS/SCSS files before "
+  + "the framework css rewrite begins"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-9'><em>CSS isolation configuration</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "CSS Isolation Configuration can be customized via (unspecified) XML files to:"
+    + "<ul>"
+    + "<li>"
+    + "Change the scope identifier random string"
+    + "</li>"
+    + "<li>"
+    + "Create \"inheritance\" or overriding some base styles with another "
+    + "stylesheet by loading it second"
+    + "</li>"
+    + "<li>"
+    + "Share scope identifiers across multiple files"
+    + "</li>"
+    + "<li>"
+    + "alter the <strong class='code html>&lt;StaticWebAssetBasePath&gt;</strong> "
+    + "property to change the default path for static content (such as the scoped CSS files)"
+    + "</li>"
+    + "<li>"
+    + "Disable automatic bundling via the "
+    + "<strong class='code html>&lt;DisableScopedCssBundling&gt;</strong> property"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-10'><em>Razor class library (RCL) support</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "The <strong class='code html'>&lt;link&gt;</strong> for isolated styles "
+  + "will point to : <strong class='code'>StaticWebAssetBasePath/PackageIDName.bundle.scp.css</strong>"
+  + "</li>"
+  + "<li>"
+  + "Ie.: <strong class='code html'>&lt;link href=\""
+  + "StaticWebAssetBasePath/PackageIDName.bundle.scp.css\" rel=\"stylesheet\"&gt;</strong>"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code'>PackageIDName</strong> will be the packages identifier, which "
+  + "by default is the projects assembly name if no package identifier is specified in "
+  + "the project file"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-11'><em>Handle HEAD requests with an OnGet handler fallback</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "used for getting headers for a specific resource"
+  + "</li>"
+  + "<li>"
+  + "Do not send a response body like <strong class='code'>GET</strong> requests"
+  + "</li>"
+  + "<li>"
+  + "Are handled by a <strong class='code'>OnHead()</strong> response method"
+  + "</li>"
+  + "<li>"
+  + "If no <strong class='code'>OnHead()</strong> method is provided, Razor Pages "
+  + "fall back to using the <strong class='code'>OnGet()</strong> handler method"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-12'><em>XSRF/CSRF and Razor Pages</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Razor Pages use Antiforgery Validation"
+  + "</li>"
+  + "<li>"
+  + "Antiforgery tokens are injected into HTML form elements via the "
+  + "<strong class='code dclr-c'>FormTagHelper</strong>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-13'><em>Using Layouts, partials, templates, and Tag Helpers with Razor Pages</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Razor Pages can take advantage of all the Razor View features:"
+    + "<ul>"
+    + "<li>"
+    + "Layouts"
+    + "</li>"
+    + "<li>"
+    + "Partials"
+    + "</li>"
+    + "<li>"
+    + "Templates"
+    + "</li>"
+    + "<li>"
+    + "Tag Helpers"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>_ViewStart.cshtml</strong>"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>_ViewImports.cshtml</strong>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "<strong>Layout Page:</strong>"
+  + "</li>"
+  + "<li>"
+  + "Controls layout of each page"
+  + "</li>"
+  + "<li>"
+  + "Individual pages can \"opt-out\" of a layout if you don't want them to use it"
+  + "</li>"
+  + "<li>"
+  + "Can be used to import common HTML structures, eg. JavaScripts and stylesheets"
+  + "</li>"
+  + "<li>"
+  + "The individual Razor pages are rendered where the <strong class='code'>"
+  + "<span class='rz'>@</span>RenderBody()</strong> method is called in the layout file"
+  + "</li>"
+  + "<li>"
+  + "The layout file is usually found in <strong class='code'>Pages/Shared/_Layout.cshtml</strong>"
+  + "</li>"
+  + "<li>"
+  + "Layout eg.:"
+  + "<pre class='code html razor-markup'>"
+  + "&lt;!DOCTYPE html&gt;\n"
+  + "&lt;html&gt;\n"
+  + "&lt;head&gt;\n"
+  + "  &lt;title&gt;RP Sample&lt;/title&gt;\n"
+  + "  &lt;link rel=\"stylesheet\" href=\"~/lib/bootstrap/dist/css/bootstrap.css\" /&gt;\n"
+  + "&lt;/head&gt;\n"
+  + "&lt;body&gt;\n"
+  + "  &lt;a asp-page=\"/Index\"&gt;Home&lt;/a&gt;\n"
+  + "  &lt;a asp-page=\"/Customers/Create\"&gt;Create&lt;/a&gt;\n"
+  + "  &lt;a asp-page=\"/Customers/Index\"&gt;Customers&lt;/a&gt; &lt;br /&gt;\n"
+  + "\n"
+  + "  @RenderBody()\n"
+  + "  &lt;script src=\"~/lib/jquery/dist/jquery.js\"&gt;&lt;/script&gt;\n"
+  + "  &lt;script src=\"~/lib/jquery-validation/dist/jquery.validate.js\"&gt;&lt;/script&gt;\n"
+  + "  &lt;script src=\"~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js\"&gt;&lt;/script&gt;\n"
+  + "&lt;/body&gt;\n"
+  + "&lt;/html&gt;\n"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "The Layout property is set in the <strong class='code'>Pages/_ViewStart.cshtml</strong>"
+  + "file, eg.:"
+  + "<pre class='code html razor-markup'>"
+  + "@{\n"
+  + "  Layout = \"_Layout\";\n"
+  + "}"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "The layout can be set as a full path, eg. <strong class='code'>"
+  + "/Pages/Shared/_Layout.cshtml</strong> or a partial filename as seen in "
+  + "the example code above"
+  + "</li>"
+  + "<li>"
+  + "If only a partial filename is given, it will be searched for first in the "
+  + "calling file's directory, then in the <strong class='code'>Shared</strong> "
+  + "directory if it wasn't found"
+  + "</li>"
+  + "<li>"
+  + "It is recommended that the layout file be placed in the <strong class='code'>"
+  + "Pages/Shared</strong> directory as Razor Pages are meant to rely on directory "
+  + "hierarchy and not path convention"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>_ViewImports.cshtml</strong> file is a file that "
+  + "is imported by views in order to share common resource directives such as:"
+    + "<ul>"
+    + "<li>"
+    + "<stron class='code razor-markup'>@addTagHelper</strong>"
+    + "</li>"
+    + "<li>"
+    + "<stron class='code razor-markup'>@removeTagHelper</strong>"
+    + "</li>"
+    + "<li>"
+    + "<stron class='code razor-markup'>@tagHelperPrefix</strong>"
+    + "</li>"
+    + "<li>"
+    + "<stron class='code razor-markup'>@using</strong>"
+    + "</li>"
+    + "<li>"
+    + "<stron class='code razor-markup'>@model</strong>"
+    + "</li>"
+    + "<li>"
+    + "<stron class='code razor-markup'>@inherits</strong>"
+    + "</li>"
+    + "<li>"
+    + "<stron class='code razor-markup'>@inject</strong>"
+    + "</li>"
+    + "<li>"
+    + "<stron class='code razor-markup'>@namespace</strong>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>_ViewImports.cshtml</strong> file is usually kept "
+  + "in the <strong class='code'>Pages</strong> or the <strong class='code'>Views</strong> directory"
+  + "</li>"
+  + "<li>"
+  + "You can have other <strong class='code'>_ViewImports.cshtml</strong> files "
+  + "in subdirectories but they will only apply to the pages/views in their respective "
+  + "directories and their sub-directories (ie. they are applied in a hierarchical manner)"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code'>_ViewImports.cshtml</strong> files are processed in a "
+  + "hierarchical order, starting from the root directory down to the directory "
+  + "containing the page/view being processed"
+  + "</li>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/mvc/views/layout?view=aspnetcore-9.0#importing-shared-directives"
+  + "'>learn.microsoft.com</a>"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code razor-markup'>@namespace</strong> directive sets the "
+  + "namespace for the page"
+  + "</li>"
+  + "<li>"
+  + "Setting the namespace for the page means you no longer need to explicitly "
+  + "define it when calling upon different classes/models, eg.:"
+  + "<pre class='code html razor-markup'>"
+  + "@model Some.Long.Namespace.MyModel\n"
+  + "@*becomes:*@\n"
+  + "@namespace Some.Long.Namespace\n"
+  + "...\n"
+  + "@model MyModel"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "The base namespace is usually the project name followed by the pages directory eg.:"
+  + "<pre class='code html razor-markup'>"
+  + "@namespace MyProjectName.Pages"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Namespaces for views in subdirectories are automatically \"generated\" when "
+  + "importing a base namespace from an imports file, "
+  + "ie. you don't need to explicitly list the sub-folder path to the view, it is "
+  + "done automatically"
+  + "</li>"
+  + "<li>"
+  + "Eg. How having an import file with a base namespace set affects subdirectory namespaces:"
+  + "<pre class='code html razor-markup'>"
+  + "@*In a page file located in: Pages/Customers/Create.cshtml:*@\n"
+  + "@page\n"
+  + "@model RazorPagesContacts.Pages.Customers.CreateModel\n"
+  + "...\n\n"
+  + "@*The Pages/_ViewImports.cshtml file*@\n"
+  + "@namespace RazorPagesContacts.Pages\n"
+  + "..\n\n"
+  + "@*The Pages/Customers/Create.cshtml file after having the _ViewImports.cshtml file*@\n"
+  + "@page\n"
+  + "@model CreateModel\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Note how after the view import file is created that the <strong class='code'>.Customers.</strong> "
+  + "part of the namespace is never explicitly listed as it gets automatically and implicitly "
+  + "generated as the process follows the directories from the root <strong class='code'>"
+  + "_ViewImports.cshtml</strong> file down to the <strong class='code'>Create.cshtml</strong> file"
+  + "</li>"
+  + "<li>"
+  + "Table containing examples of file directory locations vs namespaces:"
+  + "<table class='code'>"
+  + "<tr class='centered'>"
+  + "<th>Path/Filename</th><th>Namespace</th><th>@namespace Directive</th>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Pages/_ViewImports.cshtml</td>"
+  + "<td>Hello.World</td>"
+  + "<td class='centered'>@namespace Hello.World</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Pages/Index.cshtml</td>"
+  + "<td>Hello.World</td>"
+  + "<td class='centered'>-</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Pages/MorePages/Page.cshtml</td>"
+  + "<td>Hello.World.MorePages</td>"
+  + "<td class='centered'>-</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Pages/MorePages/EvenMorePages/Page.cshtml</td>"
+  + "<td>Hello.World.MorePages.EvenMorePages</td>"
+  + "<td class='centered'>-</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Pages/MorePages/EvenMorePages/_ViewImports.cshtml</td>"
+  + "<td>Another.Planet</td>"
+  + "<td class='centered'>@namespace Another.Planet</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Pages/MorePages/EvenMorePages/Page.cshtml</td>"
+  + "<td>Another.Planet</td>"
+  + "<td class='centered'>-</td>"
+  + "</tr>"
+  + "<tr title='Alternatively, with no subdirectory _ViewImports.cshtml file, the page itself could alter its namespace'>"
+  + "<td>Pages/MorePages/EvenMorePages/Page.cshtml</td>"
+  + "<td>Another.Planet</td>"
+  + "<td class='centered'>@namespace Another.Planet</td>"
+  + "</tr>"
+  + "</table>"
+  + "</li>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/mvc/views/layout?view=aspnetcore-9.0"
+  + "'>learn.microsoft.com</a>"
+  + "</li>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/mvc/views/razor?view=aspnetcore-9.0#namespace"
+  + "'>learn.microsoft.com</a>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-14'><em>URL generation for Pages</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "You can use relative or absolute URLs for page navigation"
+  + "</li>"
+  + "<li>"
+  + "The absolute or root directory (ie. the directory targeted by "
+  + "URLs that start with \"<strong class='code'>/</strong>\") is the "
+  + "<strong class='code'>Pages</strong> directory"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-15'><em>ViewData attribute</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "You can give your class/model properties the <strong class='code'>[<span class='dclr-c'>"
+  + "ViewData</span>]</strong> attribute to store the property's values in the <strong>"
+  + "ViewDataDictionary</strong>, eg.:"
+  + "<pre class='code'>"
+  + "<span class='dclr'>public class</span> <span class='dclr-c'>MyModel</span> : "
+  + "<span class='dclr-c'>PageModel</span>\n"
+  + "{\n"
+  + "  [<span class='dclr-c'>ViewData</span>]\n"
+  + "  <span class='dclr'>public string</span> MyProperty { <span class='gttr'>get</span>; } "
+  + "= <span class='str'>\"Some String Data\"</span>;\n\n"
+  + "  <span class='dclr'>public void</span> OnGet()\n"
+  + "  {\n"
+  + "  }\n"
+  + "}"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "The <strong>ViewDataDictionary</strong> can be accessed from the Razor Page view via an "
+  + "<strong class='code razor-markup'>@Model</strong> directive, eg.:"
+  + "<pre class='code html razor-markup'>"
+  + "...\n"
+  + "&lt;h1&gt;@Model.MyProperty &lt;/h1&gt;\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "In the layout file you can read the property value form the <strong class='code'>ViewData"
+  + "</strong> dictionary, eg.:"
+  + "<pre class='code html razor-markup'>"
+  + "&lt;!DOCTYPE html&gt;\n"
+  + "&lt;html lang=\"en\"&gt;\n"
+  + "&lt;head&gt;\n"
+  + "  &lt;title&gt;@ViewData[\"MyProperty\"] - WebApplication&lt;/title&gt;\n"
+  + "  ..."
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-16'><em>TempData</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "You can give your class/model properties the <strong class='code'>[<span class='dclr-c'>"
+  + "TempData</span>]</strong> attribute to store the property's values only temporarily "
+  + "(ie. until they are read), eg.:"
+  + "<pre class='code'>"
+  + "<span class='dclr'>public class</span> <span class='dclr-c'>MyModel</span> : "
+  + "<span class='dclr-c'>PageModel</span>\n"
+  + "{\n"
+  + "  [<span class='dclr-c'>TempData</span>]\n"
+  + "  <span class='dclr'>public string</span> MyProperty { <span class='gttr'>get</span>; "
+  + "<span class='sttr'>set</span>; } \n"
+  + "  ..."
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "The <strong>TempData</strong> can be accessed from the Razor Page view via an "
+  + "<strong class='code razor-markup'>@Model</strong> directive, eg.:"
+  + "<pre class='code html razor-markup'>"
+  + "...\n"
+  + "&lt;h1&gt;@Model.MyProperty &lt;/h1&gt;\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "After the property is read the its value is deleted"
+  + "</li>"
+  + "<li>"
+  + "You can read the property's value without deleting it using the <strong class='code'>Keep()</strong> "
+  + "and <strong class='code'>Peek()</strong> methods (no examples given)"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-17'><em>Multiple handlers per page</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "You can create more than one submit button to target multiple handler functions, eg. in the Razor Page:"
+  + "<pre class='code html razor-markup'>"
+  + "...\n"
+  + "&lt;!-- create the different handler submitt buttons --&gt;\n"
+  + "&lt;input type=\"submit\" asp-page-handler=\"JoinList\" value=\"Join\" /&gt;\n"
+  + "&lt;input type=\"submit\" asp-page-handler=\"JoinListUC\" value=\"JOIN UC\" /&gt;\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "This is possible through <em>Named Handler Methods</em> in the class/model"
+  + "</li>"
+  + "<li>"
+  + "The formula for a named handler method is:<br>"
+  + "<strong class='code'>On&lt;HTTP Verb&gt;&lt;Unique_Name&gt;&lt;Async(if needed)&gt;()</strong>, eg.:"
+  + "<pre class='code'>"
+  + "...\n"
+  + "<span class='dclr'>public async</span> Task&lt;IActionResult&gt; <span class='hl_ylw'>OnPostJoinListAsync()</span>\n"
+  + "{\n"
+  + "  ...\n\n"
+  + "<span class='dclr'>public async</span> Task&lt;IActionResult&gt; <span class='hl_yellow'>OnPostJoinListUCAsync()</span>\n"
+  + "{\n"
+  + "  ..."
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Eg. the URLS generated by the submit buttons would be:"
+  + "<pre class='code'>"
+  + "https://localhost:5001/Customers/CreateFATH?handler=JoinList\n"
+  + "https://localhost:5001/Customers/CreateFATH?handler=JoinListUC"
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-18'><em>Custom routes</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "You can use the <strong class='code razor-markup'>@page</strong> keyword to change the "
+  + "route used to access a page, eg.:"
+  + "<pre class='code html razor-markup'>"
+  + "@page \"/Some/Other/Path\""
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "You can also use the <strong class='code razor-markup'>@page</strong> keyword to add "
+  + "or append to the current route, eg.:"
+  + "<pre class='code html razor-markup'>"
+  + "@page \"addedURLText\""
+  + "</pre>"
+  + "<li>"
+  + "You can also use the <strong class='code razor-markup'>@page</strong> keyword to "
+  + "add/require parameters for the current route, eg. adding an ID parameter requirement:"
+  + "<pre class='code html razor-markup'>"
+  + "@page \"{id}\""
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "The tilde (~) designates a \"root-relative\"path, ie. basically the same as an absolute path, eg.:"
+  + "<pre class='code'>"
+  + "~/Some/Other/Path\n"
+  + "is equivalent to:"
+  + "/Some/Other/Path"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "You can make the handlers a part of the URL instead of part of the query string:"
+  + "<pre class='code html razor-markup'>"
+  + "@page \"{handler?}\"\n"
+  + "@*the question mark at the end makes the route parameter optional\n"
+  + "(so you can still use this page without needing to submit anything)*@\n"
+  + "...\n\n"
+  + "&lt;input type=\"submit\" asp-page-handler=\"JoinList\" value=\"Join\" /&gt;\n"
+  + "&lt;input type=\"submit\" asp-page-handler=\"JoinListUC\" value=\"JOIN UC\" /&gt;\n"
+  + "...\n\n\n"
+  + "This would change the URLs from:\n"
+  + "<span class='txt-indigo'>https://localhost:5001/Customers/CreateFATH?handler=JoinList</span>\n"
+  + "<span class='txt-indigo'>https://localhost:5001/Customers/CreateFATH?handler=JoinListUC</span>\n"
+  + "to:\n"
+  + "<span class='txt-indigo'>https://localhost:5001/Customers/CreateFATH/JoinList</span>\n"
+  + "<span class='txt-indigo'>https://localhost:5001/Customers/CreateFATH/JoinListUC</span>"
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-19'><em>Collocation of JavaScript (JS) files</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Convention dictates to name it the same as the file it is for then tack a <strong class='code'>"
+  + ".js</strong> on the end, eg.:"
+  + "<pre class='code'>"
+  + "JS files for:\n"
+  + "Pages/Index.cshtml\n"
+  + "would be:\n"
+  + "Pages/Index.cshtml.js"
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-20'><em>Advanced configuration and settings</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Following two sections are for configurations/settings not required by most apps"
+  + "</li>"
+  + "<li>"
+  + "To configure the advanced settings, use the <strong class='code'>builder.Services."
+  + "AddRazorPages()</strong> method in the <strong class='code'>Program.cs</strong> where "
+  + "you configure and start your app, eg.:"
+  + "<pre class='code'>"
+  + "...\n"
+  + "builder.Services.AddRazorPages(options =>\n"
+  + "{\n"
+  + "  options.RootDirectory = <span class='str'>\"/MyPages\"</span>;\n"
+  + "  options.Conventions.AuthorizeFolder(<span class='str'>\"/MyPages/Admin\"</span>);\n"
+  + "});\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-21'><em>Specify that Razor Pages are at the content root</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Default is for the app to have the root of the Razor Pages in the <strong class='code'>"
+  + "/Pages</strong> directory"
+  + "</li>"
+  + "<li>"
+  + "This can be changed via the <strong class='code'>builder.Services.AddRazorPages()</strong> "
+  + "and <strong class='code'>WithRazorPagesAtContentRoot</strong> methods, eg.:"
+  + "<pre class='code'>"
+  + "...\n"
+  + "builder.Services.AddRazorPages(options =>\n"
+  + "{\n"
+  + "  options.Conventions.AuthorizeFolder(<span class='str'>\"/MyPages/Admin\"</span>);\n"
+  + "})\n"
+  + "  .WithRazorPagesAtContentRoot();\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r18-22'><em>Specify that Razor Pages are at a custom root directory</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Change location for Razor Pages to a custom root directory:"
+  + "<pre class='code'>"
+  + "...\n"
+  + "builder.Services.AddRazorPages(options =>\n"
+  + "{\n"
+  + "    options.Conventions.AuthorizeFolder(<span class='str'>\"/MyPages/Admin\"</span>);\n"
+  + "})\n"
+  + "  .WithRazorPagesRoot(<span class='str'>\"/path/to/razor/pages\"</span>);\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  );
+  //END R18 (Reading 12)
+  
+  //R19 (reading 12)
+  add_note("<h3 id='r19'>Article: <em>Tutorial: Get started with ASP.NET Core</em></h3>"
+  + "<ul>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-9.0&viewFallbackFrom=aspnetcore-2.2&tabs=windows"
+  + "'>learn.microsoft.com</a>"
+  + "</li>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "../w06/asp_net_core_tutorial"
+  + "'>Tutorial Files</a>"
+  + "</li>"
+  + "</ul>" 
+  
+  + "<h4 id='r19-1'><em>Create a web app project</em></h4>"
+  + "<p>"
+  + "Tutorial covers how to create and run <strong>ASP.NET Core</strong> web app via the "
+  + "<strong>.NET CLI</strong>."
+  + "</p>"
+  + "<ul>"
+  + "<li>"
+  + "Use the CLI Cmd: <strong class='code cli'>dotnet new webapp --output MyProjectName --no-https</strong>"
+  + "</li>"
+  + "<li>"
+  + "Running the command will create a folder named \"MyProjectName\" with the project files in it"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r19-2'><em>Run the app</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Change directories to inside the project folder and then use the CLI Cmd: <strong class='code cli'>"
+  + "dotnet run</strong>"
+  + "</li>"
+  + "<li>"
+  + "The Project will build and return some output to the terminal once it is finished where you can "
+  + "find the local URL/port to connect to it:"
+  + "<pre class='code'>"
+  + "  Building...\n"
+  + "info: Microsoft.Hosting.Lifetime[14]\n"
+  + "      <span class='hl_yellow'>Now listening on: http://localhost:5000</span>\n"
+  + "info: Microsoft.Hosting.Lifetime[0]\n"
+  + "      Application started. Press Ctrl+C to shut down.\n"
+  + "info: Microsoft.Hosting.Lifetime[0]\n"
+  + "      Hosting environment: Development\n"
+  + "info: Microsoft.Hosting.Lifetime[0]\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Open a browser and go to the URL, eg.: <span class='code'>http://localhost:5000</span>"
+  + "</li>"
+  + "<li>"
+  + "You will see a basic default page built by the app, eg.:<br>"
+  + "<img src='imgs/default_aspdotnet_site.png'/>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r19-3'><em>Edit a Razor page</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Exit the server program (which is still running in the terminal) with <strong class='code'>"
+  + "Ctrl+C</strong>"
+  + "</li>"
+  + "<li>"
+  + "Go into your project files and into the <strong class='code'>Pages</strong> directory"
+  + "</li>"
+  + "<li>"
+  + "Open the <strong class='code'>Index.cshtml</strong> file in your editor"
+  + "</li>"
+  + "<li>"
+  + "Add the highlighted line below to have the page display the current time when loaded:"
+  + "<pre class='code html razor-markup'>"
+  + "@page\n"
+  + "@model IndexModel\n"
+  + "@{\n"
+  + "  ViewData[\"Title\"] = \"Home page\";\n"
+  + "}\n"
+  + "\n"
+  + "&lt;div class=\"text-center\"&gt;\n"
+  + "  &lt;h1 class=\"display-4\"&gt;Welcome&lt;/h1&gt;\n\n"
+  + "  <span class='hl_ylw html razor-markup'>&lt;p&gt;Server time is currently: @DateTime.Now&lt;/p&gt;\n\n</span><span class='html'>"
+  + "  &lt;p&gt;Learn about &lt;a href=\"https://learn.microsoft.com/aspnet/core\"&gt;building Web apps with ASP.NET Core&lt;/a&gt;.&lt;/p&gt;\n"
+  + "&lt;/div&gt;</span>\n"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Save your changes to the page"
+  + "</li>"
+  + "<li>"
+  + "Run the <strong class='code cli'>dotnet run</strong> command again"
+  + "</li>"
+  + "<li>"
+  + "Open the given URL in browser and you should now see the time displayed on the page:<br>"
+  + "<img src='imgs/edited_aspdotnet_site.png'/>"
+  + "</li>"
+  + "</ul>"
+  );
+  //END R19 (Reading 12)
+  
   //week note template *********DO NOT EDIT**********************
   add_note("<h2 id='w0X'>Week 0X</h2>");
   
@@ -9745,7 +11907,7 @@
                   </ul>
                   <!--end chapter/article list-->
                 </li>
-                <!--end r15-->
+                <!--end r15 (reading 11)-->
               </ul>
               <!--END READING LIST-->
             </li>
@@ -9753,6 +11915,264 @@
           </ul>
         </li>
         <!--END WEEK 05-->
+        
+        
+        <!--Week 06-->
+        <li>
+          <h1><a href="#w06">Week 06</a></h1>
+          <ul>
+            <!--READING TEMPLATE r16-->
+            <li>
+              <h2>Reading 12: </h2>
+              <!--rx-list-->
+              <ul>
+                <!--r16 template (li->ch in text or article-->
+                <li>
+                  <h3><a href="#r16-0"><em>Assignment Introduction</em></a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#r16-0a"><em>ASP.NET Core Razor Pages</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+                <li>
+                  <h3><a href="#r16">Article: <em>Overview of ASP.NET Core</em></a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#r16-1"><em>Why choose ASP.NET Core?</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r16-2"><em>Build web APIs and web UI using ASP.NET Core MVC</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r16-3"><em>Client-side development</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r16-4"><em>ASP.NET Core targeting .NET Framework</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+                <!--end r16 template-->
+                
+                <!--R17-->
+                <li>
+                  <h3><a href="#r17">Article: <em>Choose between ASP.NET 4.x and ASP.NET Core</em></a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#r17-1"><em>ASP.NET Core</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r17-2"><em>ASP.NET 4.x</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r17-3"><em>ASP.NET Core scenarios</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r17-4"><em>ASP.NET 4.x scenarios</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r17-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r17-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+                <!--END R17-->
+                
+                <!--R18-->
+                <li>
+                  <h3><a href="#r18">Article: <em>Introduction to Razor Pages in ASP.NET Core</em></a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#r18-1"><em>Create a Razor Pages project</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-2"><em>Razor Pages</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-3"><em>Write a basic form</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-4"><em>The home page</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-5"><em>The Edit.cshtml file</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-6"><em>Validation</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-7"><em>CSS isolation</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-8"><em>CSS preprocessor support</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-9"><em>CSS isolation configuration</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-10"><em>Razor class library (RCL) support</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-11"><em>Handle HEAD requests with an OnGet handler fallback</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-12"><em>XSRF/CSRF and Razor Pages</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-13"><em>Using Layouts, partials, templates, and Tag Helpers with Razor Pages</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-14"><em>URL generation for Pages</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-15"><em>ViewData attribute</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-16"><em>TempData</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-17"><em>Multiple handlers per page</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-18"><em>Custom routes</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-19"><em>Collocation of JavaScript (JS) files</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-20"><em>Advanced configuration and settings</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-21"><em>Specify that Razor Pages are at the content root</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r18-22"><em>Specify that Razor Pages are at a custom root directory</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+                <!--END R18-->
+                
+                <!--R19-->
+                <li>
+                  <h3><a href="#r19">Article: <em>Tutorial: Get started with ASP.NET Core</em></a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#r19-1"><em>Create a web app project</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-2"><em>Run the app</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-3"><em>Edit a Razor page</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r19-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+                <!--END R19-->
+                
+                
+              </ul>
+              <!--END READING LIST-->
+            </li>
+            <!--END READING R16/R17/R18/19 (reading 12)-->
+            
+            <!--READING TEMPLATE-->
+            <li>
+              <h2>Reading 0x: </h2>
+              <ul>
+                <li>
+                  <h3><a href="#rx">Chz <em>Chapter_title_here</em></a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#rx-y">z.y <em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+              </ul>
+              <!--END READING LIST-->
+            </li>
+            <!--END READING TEMPLATE-->
+            
+            <!--READING TEMPLATE-->
+            <li>
+              <h2>Reading 0x: </h2>
+              <ul>
+                <li>
+                  <h3><a href="#rx">Chz <em>Chapter_title_here</em></a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#rx-y">z.y <em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+              </ul>
+              <!--END READING LIST-->
+            </li>
+            <!--END READING TEMPLATE-->
+            
+            <!--READING TEMPLATE-->
+            <li>
+              <h2>Reading 0x: </h2>
+              <ul>
+                <li>
+                  <h3><a href="#rx">Chz <em>Chapter_title_here</em></a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#rx-y">z.y <em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+              </ul>
+              <!--END READING LIST-->
+            </li>
+            <!--END READING TEMPLATE-->
+          </ul>
+        </li>
+        <!--END WEEK 06-->
+        
+        
         
         <!--rules for new rx++, a++, or new list items in each ul:
           >>new h2 reading title and rx++/ax++ for each:
@@ -9831,6 +12251,14 @@
         //highlight xaml texts (el's with .xaml class)
         let xaml_els = document.querySelectorAll('.xaml');
         xaml_els.forEach(el => setXAMLHighlights(el));
+        
+        //highlight html texts (el's with .html class)
+        let html_els = document.querySelectorAll('.html');
+        html_els.forEach(el => setHTMLHighlights(el));
+        
+        //highlight Razor Markup texts (el's with .html class)
+        let rzpg_els = document.querySelectorAll('.razor-markup');
+        rzpg_els.forEach(el => setRZPGHighlights(el));
       </script>
     </div>
     <!--END MAIN DISPLAY-->
