@@ -24,6 +24,8 @@
       --null: blue;
       --generic-type:teal;
       
+      --query-code: cadetblue;
+      
       --xaml-markup-el: darkred;
       --xaml-markup-att: red;
       --xaml-markup-text: blue;
@@ -60,6 +62,7 @@
     li
     {
       max-width:30em;
+      margin-top: 0.4em;
     }
     
     table
@@ -117,6 +120,52 @@
     {
       padding-left: 2em;
       grid-column: 2;
+    }
+    
+    /* File tree system:
+         > Ul element gets ft class
+         > all unlabeled (un-classed) li elements get a file emoji
+         > empty dir classed li get closed dir emoji
+         > for a dir classed li with a name, used closed/clsd/empty class if has no contents (child uls)
+    */
+    
+    .ft > li,
+    .file-tree li
+    {
+      list-style: "\1F4C4";/*fileemoji (face up paper emoji)*/
+      padding-left: 0.25em;
+    }
+    
+    .ft > li.d,
+    .ft > li.dir,
+    .file-tree li.d,
+    .file-tree li.dir
+    {
+      list-style: "\1F4C2";/*open dir emoji*/
+    }
+    
+    .ft > li.d:empty,
+    .ft > li.dir:empty,
+    .file-tree li.d:empty,
+    .file-tree li.dir:empty
+    {
+      list-style: "\1F4C1";/*closed dir emoji*/
+    }
+    
+    .ft > li.d.closed,
+    .ft > li.d.clsd,
+    .ft > li.d.empty,
+    .ft > li.dir.closed,
+    .ft > li.dir.clsd,
+    .ft > li.dir.empty,
+    .file-tree li.d.closed,
+    .file-tree li.d.clsd,
+    .file-tree li.d.empty,
+    .file-tree li.dir.closed,
+    .file-tree li.dir.clsd,
+    .file-tree li.dir.empty
+    {
+      list-style: "\1F4C1";/*closed dir emoji*/
     }
     
     .code
@@ -244,6 +293,16 @@
     .try-catch
     {
       color: var(--try);
+    }
+    
+    .query-code,
+    .qcode,
+    .q-code,
+    .queryc,
+    .qryc,
+    .query-c
+    {
+      color: var(--query-code);
     }
     
     .rzp-kw,
@@ -409,8 +468,6 @@
     console.log("XAML code will not be highlighted.");
     console.log("HTML code will not be highlighted.");
   }
-  
-  console.log("about to start highlighting stuff");
   
   //set up highlights:
   //XAML HIGHLIGHTS
@@ -877,8 +934,6 @@
     
   }
   //END FUNC SET RZPG HIGHLIGHTS
-  
-  console.log("Done with hightlighting stuff");
   
   function add_note(note)
   {
@@ -5984,7 +6039,7 @@
   + "<li>"
   + "REF: <a target='_blank' href='"
   + "https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords"
-  + "'>learn.micorsoft.com</a>"
+  + "'>learn.microsoft.com</a>"
   + "</li>"
   + "<li>"
   + "Apparently you don't even need to include the <strong class='code nw'>new</strong> "
@@ -6032,7 +6087,7 @@
   + "<li>"
   + "REF: <a target='_blank' href='"
   + "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/sealed"
-  + "'>learn.micorsoft.com</a>"
+  + "'>learn.microsoft.com</a>"
   + "</li>"
   + "</ul>"
   
@@ -6311,7 +6366,7 @@
   + "<li>"
   + "REF: <a target='_blank' href='"
   + "https://learn.microsoft.com/en-us/dotnet/fundamentals/runtime-libraries/system-object-equals"
-  + "'>learn.micorsoft.com</a>"
+  + "'>learn.microsoft.com</a>"
   + "</li>"
   + "<li>"
   + "The proper way to compare two objects is to use (and overload) the "
@@ -7312,7 +7367,7 @@
     + "<li>"
     + "Ref: <a target='_blank' href='"
     + "https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/generics"
-    + "'>learn.micorsoft.com</a>"
+    + "'>learn.microsoft.com</a>"
     + "</li>"
     + "</ul>"
   + "</li>"
@@ -7409,7 +7464,7 @@
   + "<li>"
   + "REF: <a target='_blank' href='"
   + "https://learn.microsoft.com/en-us/dotnet/api/system.io.textwriter?view=net-9.0"
-  + "'>learn.micorsoft.com</a>"
+  + "'>learn.microsoft.com</a>"
   + "</li>"
   + "<li>"
   + "If the process fails, an exception can be thrown, so it is good to use the "
@@ -9148,7 +9203,7 @@
   + "<li>"
   + "REF: <a target='_blank' href='"
   + "https://learn.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-2.2"
-  + "'>learn.micorsoft.com</a>"
+  + "'>learn.microsoft.com</a>"
   + "</li>"
   + "<li>"
   + "<strong>ASP.NET:</strong>"
@@ -10809,6 +10864,8 @@
   + "</ul>"
   );
   //END R19 (Reading 12)
+  
+  //Assignment 4 a4
   add_note("<h3 id='a4'><em>ASP.NET Core Razor Web Pages</em></h3>"
   
   + "<h4 id='a4-1'><em>Instructions</em></h4>"
@@ -10869,18 +10926,6 @@
     + "dotnet add package Microsoft.EntityFrameworkCore.SqlServer\n"
     + "dotnet add package Microsoft.EntityFrameworkCore.Tools\n"
     + "</pre>"
-    + "</li>"
-    + "<li>"
-    + ""
-    + "</li>"
-    + "<li>"
-    + ""
-    + "</li>"
-    + "<li>"
-    + ""
-    + "</li>"
-    + "<li>"
-    + ""
     + "</li>"
     + "</ul>"
   + "</li>"
@@ -11404,41 +11449,1720 @@
   + "), Required, StringLength(30)</span>]"
   + "</pre>"
   + "</li>"
+  + "</ul>"
+  );
+  //END ASSIGNMENT 04
+  
+  //w07
+  add_note("<h2 id='w07'>Week 07</h2>");
+  
+  //R20
+  add_note("<h3 id='r20'>Article: <em>Session and state management in ASP.NET Core</em></h3>"
+  + "<ul>"
   + "<li>"
-  + ""
-  + "</li>"
-  + "<li>"
-  + "<strong id='a4-3'></strong>"
+  + "<a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/app-state?view=aspnetcore-9.0"
+  + "'>learn.microsoft.com</a>"
   + "</li>"
   + "</ul>"
   
-  + "<h4 id='a4-X'><em>Sub_Section_Title_Here</em></h4>"
+  + "<h4 id='r20-1'><em>State management</em></h4>"
   + "<p>"
-  + ""
-  + ""
-  + ""
+  + "HTTP requests are \"Stateless\" ie. they do not store information between requests, "
+  + "but are independent requests from one another. This article goes over various ways to "
+  + "retain data between requests."
   + "</p>"
   + "<ul>"
   + "<li>"
-  + ""
+  + "Several approaches to store data:"
+  + "<table>"
+  + "<tr>"
+  + "<th>Storage Approach</th><th>Storage Mechanism</th>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Cookies</td>"
+  + "<td>HTTP cookies. May be created or given data from the server.</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Session State</td>"
+  + "<td>Http cookies and server-side app code.</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>TempData</td>"
+  + "<td>HTTP cookies or session state</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Query Strings</td>"
+  + "<td>HTTP query strings</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Hidden Fields</td>"
+  + "<td>HTTP Form Fields</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>HttpContext.Items</td>"
+  + "<td>Server-Side app code</td>"
+  + "</tr>"
+  + "<tr>"
+  + "<td>Cache</td>"
+  + "<td>Server-side app code</td>"
+  + "</tr>"
+  + "</table>"
   + "</li>"
   + "</ul>"
   
-  + "<h5 id='a4-Xz'><em>Sub_heading_title_here</em></h5>"
-  + "<p>"
-  + ""
-  + ""
-  + ""
-  + "</p>"
+  + "<h5 id='r20-1a'><em>SignalR/Blazor Server and HTTP context-based state management</em></h5>"
   + "<ul>"
   + "<li>"
-  + ""
+  + "<strong>SignalR</strong> apps should not use state management approaches that rely on a \"stable "
+  + "HTTP context\" for storing data such as session state"
+  + "</li>"
+  + "<li>"
+  + "<strong>SignalR</strong> is an open-source library used to simplify adding real-time "
+  + "web functionality to apps (ie. enables server-side code to instantly push data to the clients)"
+  + "</li>"
+  + "<li>"
+  + "Eg. apps that would use SignalR:"
+    + "<ul>"
+    + "<li>"
+    + "Games"
+    + "</li>"
+    + "<li>"
+    + "Social Networking"
+    + "</li>"
+    + "<li>"
+    + "Voting"
+    + "</li>"
+    + "<li>"
+    + "Auction"
+    + "</li>"
+    + "<li>"
+    + "Maps"
+    + "</li>"
+    + "<li>"
+    + "Other GPS Related Apps"
+    + "</li>"
+    + "<li>"
+    + "Dashboard/monitoring apps"
+    + "</li>"
+    + "<li>"
+    + "Collaborative apps"
+    + "</li>"
+    + "<li>"
+    + "Apps that require notifications"
+    + "</li>"
+    + "<li>"
+    + "Etc."
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Instead SignalR apps store data in a \"per-connection state\" in "
+  + "<strong class='code'>Context.Items</strong> in the <strong>Hub</strong>"
+  + "</li>"
+  + "<li>"
+  + "The <strong>Hub</strong> is a SignalR managed pipeline that allows both "
+  + "server and client to call methods on each other via sending a message containing "
+  + "the method name and the parameters to pass to the method"
+  + "</li>"
+  + "<li>"
+  + "The SignalR has both a text based JSON hub protocol and a binary hub protocol based "
+  + "on <strong>MessagePack</strong>"
+  + "</li>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-9.0"
+  + "'>learn.microsoft.com</a>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r20-1b'><em>Cookies</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Cookies store data across requests"
+  + "</li>"
+  + "<li>"
+  + "Cookie data is sent with every request"
+  + "</li>"
+  + "<li>"
+  + "Cookie size should be kept small to keep request data smaller"
+  + "</li>"
+  + "<li>"
+  + "Cookies are usually only used as an identifier key for the app"
+  + "</li>"
+  + "<li>"
+  + "Most browsers restrict cookie size to 4096 bytes"
+  + "</li>"
+  + "<li>"
+  + "The number of cookies per domain is also restricted"
+  + "</li>"
+  + "<li>"
+  + "Cookies are usually the most \"durable\" way to store data on the client"
+  + "</li>"
+  + "<li>"
+  + "Cookies have several shortcomings due to being stored on the client:"
+    + "<ul>"
+    + "<li>"
+    + "Can be tampered with (thus need to be validated by the app)"
+    + "</li>"
+    + "<li>"
+    + "Can be deleted by the user"
+    + "</li>"
+    + "<li>"
+    + "Can expire"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Often used for client personalization"
+  + "</li>"
+  + "<li>"
+  + "Often used for identification of a user, Not authentication"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r20-1c'><em>Session state</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Uses an app maintained storage"
+  + "</li>"
+  + "<li>"
+  + "Data stored in an \"ephemeral\" Cache"
+  + "</li>"
+  + "<li>"
+  + "As the data in the Session is not permanent, data it stores should "
+  + "not be critical data for the website to function and/or should be "
+  + "backed up in a database"
+  + "</li>"
+  + "<li>"
+  + "SignalR apps do tno support Session State as SignalR Hub may execute "
+  + "independent of the HTTP Context"
+  + "</li>"
+  + "<li>"
+  + "ASP.NET Core tracks sessions via a <strong>Session Id Cookie</strong> "
+  + "given to the client"
+  + "</li>"
+  + "<li>"
+  + "As cookies are sent with each request to the server, the app can use the "
+  + "Session Id Cookie to identify the client request and fetch the appropriate "
+  + "session data"
+  + "</li>"
+  + "<li>"
+  + "Session cookies are specific to browsers, not shared across browsers"
+  + "</li>"
+  + "<li>"
+  + "Session cookies are deleted when the browser is closed"
+  + "</li>"
+  + "<li>"
+  + "If a session for a received cookie expires, a new session is created using the "
+  + "same session cookie"
+  + "</li>"
+  + "<li>"
+  + "In order for a session to be retained (kept) at least one value must be "
+  + "set in it, (ie. empty session aren't kept)"
+  + "</li>"
+  + "<li>"
+  + "When sessions are not kept (ie. empty sessions), a new session id is generated "
+  + "for each new request"
+  + "</li>"
+  + "<li>"
+  + "By default session data times-out (is no longer retained) 20 minutes after "
+  + "the last request"
+  + "</li>"
+  + "<li>"
+  + "The session timeout can be set by the app"
+  + "</li>"
+  + "<li>"
+  + "Session data is deleted when:"
+    + "<ul>"
+    + "<li>"
+    + "The <strong class='code'>ISession.Clear</strong> method implementation "
+    + "is called"
+    + "</li>"
+    + "<li>"
+    + "The session expires"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "No default mechanism for the client to relay to the app that the cookie has expired or "
+  + "been deleted by the user or closing of the browser"
+  + "</li>"
+  + "<li>"
+  + "Session state is not \"marked essential\" by default"
+  + "</li>"
+  + "<li>"
+  + "Session state doesn't work unless tracking is permitted by the client"
+  + "</li>"
+  + "<li>"
+  + "ASP.NET Framework's \"cookieless session\" feature is insecure and vulnerable "
+  + "to \"fixation attacks\", thus no replacement for the feature has been developed"
+  + "</li>"
+  + "<li>"
+  + "Sensitive data should not be stored in the session state as the user may "
+  + "not clear their session cookies or close their browser before another user "
+  + "begins to use the client browser (which would still be using the same "
+  + "session cookie)"
+  + "</li>"
+  + "<li>"
+  + "Session data is stored in the memory of the same server of the app"
+  + "</li>"
+  + "<li>"
+  + "Depending on how the server handles sessions, you may need to use "
+  + "<strong>\"Sticky Sessions\"</strong> to tie each session to a specific "
+  + "app instance, but there are better methods as this can affect scalability of an app "
+  + "and make web app updates more complex"
+  + "</li>"
+  + "<li>"
+  + "Session cookies are encrypted by <strong>IDataProtector</strong> and it "
+  + "must be configured properly to read the cookies on each server"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r20-1d'><em>Configure session state</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "The framework includes middleware for managing session states"
+  + "</li>"
+  + "<li>"
+  + "There are several things you have to include in your <strong class='code'>"
+  + "Program.cs</strong> file when you set up your app instance:"
+    + "<ul>"
+    + "<li>"
+    + "Any <strong class='code'>IDistributedCache</strong> memory caches"
+    + "</li>"
+    + "<li>"
+    + "A call to <strong class='code'>AddSession()</strong>"
+    + "</li>"
+    + "<li>"
+    + "A call to <strong class='code'>UseSession()</strong>"
+    + "</li>"
+    + "<li>"
+    + "Eg.:"
+    + "<pre class='code'>"
+    + "<span class='dclr'>var</span> builder = WebApplication.CreateBuilder(args);\n"
+    + "\n"
+    + "builder.Services.AddRazorPages();\n"
+    + "builder.Services.AddControllersWithViews();\n"
+    + "\n"
+    + "<span class='hl_ylw'>builder.Services.AddDistributedMemoryCache();</span>\n"
+    + "\n"
+    + "<span class='hl_ylw'>builder.Services.AddSession(options =>\n"
+    + "{\n"
+    + "<span class='comment'>//setting a short timeout for testing purposes</span>\n"
+    + "    options.IdleTimeout = TimeSpan.FromSeconds(10);\n"
+    + "    options.Cookie.HttpOnly = <span class='tfl'>true</span>;\n"
+    + "    options.Cookie.IsEssential = <span class='tfl'>true</span>;\n"
+    + "});</span>\n"
+    + "\n"
+    + "<span class='dclr'>var</span> app = builder.Build();\n"
+    + "\n"
+    + "<span class='if'>if</span> (!app.Environment.IsDevelopment())\n"
+    + "{\n"
+    + "    app.UseExceptionHandler(<span class='str'>\"/Error\"</span>);\n"
+    + "    app.UseHsts();\n"
+    + "}\n"
+    + "\n"
+    + "app.UseHttpsRedirection();\n"
+    + "app.UseStaticFiles();\n"
+    + "\n"
+    + "app.UseRouting();\n"
+    + "\n"
+    + "app.UseAuthorization();\n"
+    + "\n"
+    + "<span class='hl_ylw'>app.UseSession();</span>\n"
+    + "\n"
+    + "app.MapRazorPages();\n"
+    + "app.MapDefaultControllerRoute();\n"
+    + "\n"
+    + "app.Run();\n"
+    + "</pre>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Order of calls to the middleware functions is important:<br>"
+  + "you must call <strong class='code'>UseSession()</strong>:"
+    + "<ul>"
+    + "<li>"
+    + "<em>After</em> <strong class='code'>UseRouting()</strong>"
+    + "</li>"
+    + "<li>"
+    + "<em>Before</em> <strong class='code'>MapRazorPages()</strong>"
+    + "</li>"
+    + "<li>"
+    + "<em>Before</em> <strong class='code'>MapDefaultControllerRoute()</strong>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code'>HttpContext.Session</strong> becomes available after the "
+  + "session state is configured"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code'>HttpContext.Session</strong> can't be used before "
+  + "<strong class='code'>UseSession()</strong> is called"
+  + "</li>"
+  + "<li>"
+  + "After starting to write to the response stream, you can't create a new session "
+  + "or new session cookie"
+  + "</li>"
+  + "<li>"
+  + "Exceptions are recorded ot the web server log, not displayed to browser"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r20-1e'><em>Load session state asynchronously</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "The default session provider of ASP.NET Core normally loads sessions synchronously"
+  + "</li>"
+  + "<li>"
+  + "It will only load records from the <strong class='code'>IDistributedCache</strong> "
+  + "store asynchronously if <strong class='code'>ISession.LoadAsync()</strong> "
+  + "is called before the methods:"
+    + "<ul>"
+    + "<li>"
+    + "<strong class='code'>TryGetValue()</strong>"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>Set()</strong>"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>Remove()</strong>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Loading Synchronously can cause a performance issue when apps are "
+  + "running in production at scale"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r20-1f'><em>Session options</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "You can override session defaults via the <strong class='code'>SessionOptions</strong>"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code'>Cookie</strong> option property:"
+    + "<ul>"
+    + "<li>"
+    + "Controls settings for cookie creation"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>Name</strong> property defaults to value of "
+    + "<strong class='code'>SessionDefaults.CookieName</strong> (<strong class='code'>"
+    + ".AspNetCore.Session</strong>)"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>Path</strong> property defaults to the value of "
+    + "<strong class='code'>SessionDefaults.CookiePath</strong> (<strong class='code'>/</strong>)"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>SameSite</strong> property defaults to value of <strong "
+    + "class='code'>SameSiteMode.Lax</strong> (<strong class='code'>1</strong>)"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>HttpOnly</strong> property defaults to "
+    + "<strong class='tfl'>true</strong>"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>IsEssential</strong> defaults to <strong class='tfl'>"
+    + "false</strong>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code'>IdleTimeout</strong> option property:"
+    + "<ul>"
+    + "<li>"
+    + "How long the session can be idle before the session is abandoned"
+    + "</li>"
+    + "<li>"
+    + "Each time the session is accessed the time is reset"
+    + "</li>"
+    + "<li>"
+    + "Only applies to the session, not the cookie expiration"
+    + "</li>"
+    + "<li>"
+    + "default is 20 minutes"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code'>IOTimeout</strong> option property:"
+    + "<ul>"
+    + "<li>"
+    + "Max time allowed to load or save a session"
+    + "</li>"
+    + "<li>"
+    + "May only applies to asynchronous operations"
+    + "</li>"
+    + "<li>"
+    + "Timer can be disabled by using the <strong class='code'>InfiniteTimeSpan</strong> "
+    + "field"
+    + "</li>"
+    + "<li>"
+    + "Default timer is 1 minute"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "The default name of the client browser session cookie used to track the session "
+  + "is <strong class='code'>.AspNetCore.Session</strong>"
+  + "</li>"
+  + "<li>"
+  + "The default path of the client browser session cookie is root (/)"
+  + "</li>"
+  + "<li>"
+  + "Because the cookie doesn't specify a domain, and because <strong class='code'>"
+  + "HttpOnly</strong> defaults to <strong class='tfl'>true</strong>, it is not available to the "
+  + "client-side script on the page"
+  + "</li>"
+  + "<li>"
+  + "Eg. using <strong class='code'>SessionOptiions</strong> to override cookie session defaults:"
+  + "<pre class='code'>"
+  + "<span class='dclr'>var</span> builder = WebApplication.CreateBuilder(args);\n"
+  + "\n"
+  + "builder.Services.AddRazorPages();\n"
+  + "builder.Services.AddControllersWithViews();\n"
+  + "\n"
+  + "builder.Services.AddDistributedMemoryCache();\n"
+  + "\n"
+  + "<span class='hl_ylw'>builder.Services.AddSession(options =>\n"
+  + "{\n"
+  + "    options.Cookie.Name = <span class='str'>\".AdventureWorks.Session\"</span>;\n"
+  + "    options.IdleTimeout = TimeSpan.FromSeconds(10);\n"
+  + "    options.Cookie.IsEssential = <span class='tfl'>true</span>;\n"
+  + "});</span>\n"
+  + "\n"
+  + "var app = builder.Build();\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Sessions are <em>Non-Locking</em>, ie. if two simultaneous requests try to alter "
+  + "the data of a session, the last request will override the first"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code'>Session</strong> is implemented as a <em>coherent session</em>, "
+  + "meaning that all contents are stored together"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r20-1g'><em>Set and get Session values</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "You can access a session state from the controller files, ie. the Razor Page "
+  + "<strong class='code'>PageModel</strong> class or the MVC <strong class='code'>"
+  + "Controller</strong> class"
+  + "</li>"
+  + "<li>"
+  + "The session state is accessible from the <strong class='code'>"
+  + "HttpContext.Session</strong> property"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>HttpContext.Session</strong> property implements the "
+  + "<strong class='code dclr-c'>ISession</strong> interface"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code dclr-c'>ISession</strong> interface is in the <strong class='code'>"
+  + "Microsoft.AspNetCore.Http</strong> Namespace"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code dclr-c'>ISession</strong> interface provides several "
+  + "methods to set and get integer and string values:"
+    + "<ul>"
+    + "<li>"
+    + "<strong class='code'>Get(<span class='dclr-c'>ISession</span> theSession, "
+    + "<span class='dclr'>String</span> key)</strong> (returns: <strong class='code'>"
+    + "<span class='dclr'>byte</span>[]</strong>)"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>GetInt32(<span class='dclr-c'>ISession</span> "
+    + "theSession, <span class='dclr'>String</span> key)</strong>"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>GetString(<span class='dclr-c'>ISession</span> "
+    + "theSession, <span class='dclr'>String</span> key)</strong>"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>SetInt32(<span class='dclr-c'>ISession</span> "
+    + "theSession, <span class='dclr'>String</span> key, <span class='dclr'>Int32</span> value)</strong>"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>SetString(<span class='dclr-c'>ISession</span> "
+    + "theSession, <span class='dclr'>String</span> key, <span class='dclr'>String</span> value)</strong>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>key</strong> parameter is the key to read and "
+  + "return in a key-value pair"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>theSession</strong> parameter appears to be optional"
+  + "</li>"
+  + "<li>"
+  + "Eg. using a session from a Razor Page:"
+  + "<pre class='code html razor-markup'>"
+  + "@page\n"
+  + "@using Microsoft.AspNetCore.Http\n"
+  + "@model IndexModel\n"
+  + "\n"
+  + "...\n"
+  + "\n"
+  + "Name: @HttpContext.Session.GetString(\"_NameKey\")\n"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Eg. Using a session from a Razor Page model:"
+  + "<pre class='code'>"
+  + "...\n"
+  + "<span class='dclr'>public void</span> OnGet()\n"
+  + "{\n"
+  + "    <span class='if'>if</span> (<span class='dclr'>string</span>"
+  + ".IsNullOrEmpty(HttpContext.Session.GetString(<span class='str'>"
+  + "\"_NameKey\"</span>)))\n"
+  + "    {\n"
+  + "        HttpContext.Session.SetString(<span class='str'>\"_NameKey\"</span>, <span class='str'>\"The Doctor\"</span>);\n"
+  + "        HttpContext.Session.SetInt32(<span class='str'>\"_AgeKey\"</span>, 73);\n"
+  + "    }\n"
+  + "    <span class='dclr'>var</span> name = HttpContext.Session.GetString(SessionKeyName);\n"
+  + "    <span class='dclr'>var</span> age = HttpContext.Session.GetInt32(SessionKeyAge).ToString();\n"
+  + "\n"
+  + "    _logger.LogInformation(<span class='str'>\"Session Name: {</span>Name<span class='str'>}\"</span>, name);\n"
+  + "    _logger.LogInformation(<span class='str'>\"Session Age: {</span>Age<span class='str'>}\"</span>, age);\n"
+  + "}\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "In a distributed cache scenario, string and integer values must be serialized"
+  + "</li>"
+  + "</ul>"
+  
+  
+  + "<h4 id='r20-2'><em>TempData</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "The <strong class='code'>TempData</strong> property appears to be a property of "
+  + "a <strong class='code dclr-c'>PageModel</strong> class or a "
+  + "<strong class='code dclr-c'>Controller</strong> class"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>TempData</strong> property is an instance of the <strong class='code dclr-c'>"
+  + "ITempDataDictioary</strong>"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>TempData</strong> property holds data until it is "
+  + "read in a request and then the values that are read are deleted at the end of the request"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code dclr-c'>ITempDataDictioary</strong> has several methods "
+  + "that can prevent deletion of its data:"
+    + "<ul>"
+    + "<li>"
+    + "<strong class='code'>Keep()</strong> Method: marks all items in the "
+    + "dictionary for retention"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>Keep(<span class='dclr'>string</span> keyName)</strong> "
+    + "method: marks specified key-value pair for retention"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>Peek(<span class='dclr'>string</span> keyName)</strong> "
+    + "method: returns value of specified key but does not delete the data"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Add a property of the <strong class='code dclr-c'>PageModel</strong> or "
+  + "<strong class='code dclr-c'>Controller</strong> class to the <strong class='code'>"
+  + "TempData</strong> dictionary with the <strong class='code'>[<span class='dcrl-c'>"
+  + "TempData</span>]</strong> attribute"
+  + "</li>"
+  + "<li>"
+  + "Eg. add a property to the <strong class='code'>TempData</strong> dictionary:"
+  + "<pre class='code'>"
+  + "...\n"
+  + "[<span class='dclr-c'>TempData</span>]\n"
+  + "<span class='dclr'>public string</span> Message {<span class='gttr'>get</span>; "
+  + "<span class='sttr'>set</span>; }\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Eg. using the <strong class='code'>TempData</strong> property in a razor page:"
+  + "<pre class='code html razor-markup'>"
+  + "@page\n"
+  + "@model IndexModel\n"
+  + "\n"
+  + "&lt;h1&gt;Peek Contacts&lt;/h1&gt;\n"
+  + "\n"
+  + "@{\n"
+  + "    if (TempData.Peek(\"Message\") != null)\n"
+  + "    {\n"
+  + "        &lt;h3&gt;Message: @TempData.Peek(\"Message\")&lt;/h3&gt;\n"
+  + "    }\n"
+  + "}\n"
+  + "\n"
+  + "@*Content removed for brevity.*@\n"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "A cookie-based <strong class='code'>TempData</strong> provider is used by default"
+  + "</li>"
+  + "<li>"
+  + "If already using Session state, using the session state <strong class='code'>TempData</strong> provider does not "
+  + "add any overhead besides the data stored in the <strong class='code'>TempData</strong>"
+  + "</li>"
+  + "<li>"
+  + "If only using small amounts of data with the <strong class='code'>TempData</strong> (up to 500 bytes) the "
+  + "default cookie <strong class='code'>TempData</strong> provider is fine to use"
+  + "</li>"
+  + "<li>"
+  + "If using more than 500 bytes in the <strong class='code'>TempData</strong>, having that data make round-trips "
+  + "to and from the client via cookies can be an issue, consider using the Session State "
+  + "<strong class='code'>TempData</strong> provider instead"
+  + "</li>"
+  + "<li>"
+  + "Apps running on multiple servers require no additional configuration to use the cookie "
+  + "<strong class='code'>TempData</strong> provider aside of data protection"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r20-2a'><em>Configure the TempData provider</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "The cookie-based Configure the <strong class='code'>TempData</strong> provider "
+  + "is enabled by default"
+  + "</li>"
+  + "<li>"
+  + "To use the session-based <strong class='code'>TempData</strong> provider, you "
+  + "need to use the <strong class='code'>AddSessionStateTempDataProvider()</strong> "
+  + "method, eg.:"
+  + "<pre class='code'>"
+  + "<span class='dclr'>var</span> builder = WebApplication.CreateBuilder(args);\n\n"
+  + "builder.Services.AddRazorPages()\n"
+  + "<span class='hl_ylw'>                    .AddSessionStateTempDataProvider();</span>\n"
+  + "builder.Services.AddControllersWithViews()\n"
+  + "<span class='hl_ylw'>                    .AddSessionStateTempDataProvider();</span>\n"
+  + "\n"
+  + "<span class='hl_ylw'>builder.Services.AddSession();</span>\n"
+  + "\n"
+  + "<span class='dclr'>var</span> app = builder.Build();\n"
+  + "...\n"
+  + "\n"
+  + "app.UseAuthorization();\n"
+  + "\n"
+  + "<span class='hl_ylw'>app.UseSession();</span>\n"
+  + "\n"
+  + "app.MapRazorPages();\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r20-3'><em>Query strings</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "Has all the pros and cons that come with storing data in a query string"
+  + "</li>"
+  + "<li>"
+  + "Can share the state via the URL"
+  + "</li>"
+  + "<li>"
+  + "As data is exposed in the URL, can not store sensitive data there"
+  + "</li>"
+  + "<li>"
+  + "etc/"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r20-4'><em>Hidden fields</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "Ie. data stored in a hidden field in the page sent to the client, then "
+  + "the data is sent via a POST request back to the server"
+  + "</li>"
+  + "<li>"
+  + "Data is never able to be trusted as client has had access to it and must always be "
+  + "revalidated"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r20-5'><em><strong class='code'>HttpContext.Items</strong></em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "Only used to store data when processing a single request"
+  + "</li>"
+  + "<li>"
+  + "Collection's contents are discarded after the request is processed"
+  + "</li>"
+  + "<li>"
+  + "Often used to pass data betwixt middleware methods"
+  + "</li>"
+  + "<li>"
+  + "Eg. middleware functions add <strong class='code'>isVerified</strong> "
+  + "key to the <strong class='code'>Items</strong> collection:"
+  + "<pre class='code'>"
+  + "<span class='dclr'>var</span> builder = WebApplication.CreateBuilder(args);\n"
+  + "<span class='dclr'>var</span> app = builder.Build();\n"
+  + "\n"
+  + "<span class='dclr-c'>ILogger</span> logger = app.Logger;\n"
+  + "\n"
+  + "app.Use(<span class='dclr'>async</span> (context, next) =>\n"
+  + "{\n"
+  + "    <span class='comment'>// context.Items[\"isVerified\"] is null</span>\n"
+  + "    logger.LogInformation(<span class='str'>$\"Before setting: Verified: </span>{context.Items[<span class='str'>\"isVerified\"</span>]}<span class='str'>\"</span>);\n"
+  + "    context.Items[<span class='str'>\"isVerified\"</span>] = true;\n"
+  + "    <span class='dclr'>await</span> next.Invoke();\n"
+  + "});\n"
+  + "\n"
+  + "app.Use(<span class='dclr'>async</span> (context, next) =>\n"
+  + "{\n"
+  + "    <span class='comment'>// context.Items[\"isVerified\"] is true</span>\n"
+  + "    logger.LogInformation(<span class='str'>$\"Next: Verified: </span>{context.Items[<span class='str'>\"isVerified\"</span>]}<span class='str'>\"</span>);\n"
+  + "    <span class='dclr'>await</span> next.Invoke();\n"
+  + "});\n"
+  + "\n"
+  + "app.MapGet(<span class='str'>\"/\"</span>, <span class='dclr'>async</span> context =>\n"
+  + "{\n"
+  + "    <span class='dclr'>await</span> context.Response.WriteAsync(<span class='str'>$\"Verified: </span>{context.Items[<span class='str'>\"isVerified\"</span>]}<span class='str'>\"</span>);\n"
+  + "});\n"
+  + "\n"
+  + "app.Run();"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "To avoid collisions of two identical key strings, you can use an object "
+  + "as a key instead:"
+  + "<pre class='code'>"
+  + "...\n\n"
+  + "<span class='dclr'>public static readonly object</span> HttpContextItemsMiddlewareKey = "
+  + "<span class='nw'>new</span>();\n"
+  + "...\n\n"
+  + "httpContext.Items[HttpContextItemsMiddlewareKey] = <span class='str'>\"K-9\"</span>;\n"
+  + "..."
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r20-6'><em>Cache</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "Efficient way to store application-wide data"
+  + "</li>"
+  + "<li>"
+  + "Data stored in Cache is not associated with a specific request, user, or session"
+  + "</li>"
+  + "<li>"
+  + "Do not store user-specific data in the cache as this would expose it to other users"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r20-7'><em>Checking session state</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "Can check for \"transient failures\" via the <strong class='code'>"
+  + "ISession.IsAvailable</strong> Property"
+  + "</li>"
+  + "<li>"
+  + "Referencing the <strong class='code'>IsAvailable</strong> property before the session "
+  + "middleware runs throws a <strong class='dclr-c'>InvalidOperationException</strong> error"
+  + "</li>"
+  + "<li>"
+  + "You can use the fallowing line of code to test for session availability:"
+  + "<pre class='code'>"
+  + "HttpContext.Features.Get<<span class='generic'>ISessionFeature</span>>()?.Session != <span class='nll'>null</span>"
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r20-8'><em>Common errors</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "<strong>\"Unable to resolve service for type "
+  + "'Microsoft.Extensions.Caching.Distributed.IDistributedCache' while attempting "
+  + "to activate 'Microsoft.AspNetCore.Session.DistributedSessionStore'.\"</strong>"
+    + "<ul>"
+    + "<li>"
+    + "Often caused by failing to configure at least one <strong class='code'>"
+    + "IDistributedCache</strong> implementation"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Note that when a session fails to retain data, middleware will log exceptions but then "
+  + "continue normally with the request causing unpredictable results (ie. because it continues "
+  + "without the proper session data)"
+  + "</li>"
+  + "<li>"
+  + "Session middleware can fail due to the backing store not being available"
+    + "<ul>"
+    + "<li>"
+    + "best practice to avoid missing this issue is to include the following "
+    + "code after writing to the session:"
+    + "<pre class='code'>"
+    + "<span class='dclr'>await</span> feature.Session.CommitAsync()"
+    + "</pre>"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>CommitAsync()</strong> will throw an exception if the backing "
+    + "store is not available"
+    + "</li>"
+    + "<li>"
+    + "The app can then process the same exception"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code'>LoadAsync()</strong> also throws an exception if the "
+    + "backing store is unavailable"
+    + "</li>"
+    + "</ul>"
   + "</li>"
   + "</ul>"
   );
+  //END R20, Reading 13
   
+  //R21, reading 14
+  add_note("<h3 id='r21'>Article: <em>Layout in ASP.NET Core</em></h3>"
+  + "<ul>"
+  + "<li>"
+  + "REF <a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/mvc/views/layout?view=aspnetcore-9.0"
+  + "'>learn.microsoft.com</a>"
+  + "</li>"
+  + "</ul>"
   
-  //PREV/CURR: R19 (Reading 12)
+  + "<h4 id='r21-1'><em>What is a Layout</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "Ie. the common elements shared on a sight from page to page"
+  + "</li>"
+  + "<li>"
+  + "Usually consists of:"
+    + "<ul>"
+    + "<li>"
+    + "Header"
+    + "</li>"
+    + "<li>"
+    + "Navigation/Menu elements"
+    + "</li>"
+    + "<li>"
+    + "Footer"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Common building structures such as scripts and stylesheets are also "
+  + "usually included in a layout"
+  + "</li>"
+  + "<li>"
+  + "All these common elements can be included in a <strong>Layout File</strong>"
+  + "</li>"
+  + "<li>"
+  + "The layout file defines common elements and structures once and then they can "
+  + "be shared and reused by other pages"
+  + "</li>"
+  + "<li>"
+  + "Layout Files reduce duplicate code and make site wide changes to these common "
+  + "structures easier to implement (as you only have to do it once, in one place)"
+  + "</li>"
+  + "<li>"
+  + "Convention is to name the Layout File <strong class='code'>_Layout.cshtml</strong>"
+  + "</li>"
+  + "<li>"
+  + "Layout files created with templates for new ASP.NET Core projects:"
+    + "<ul>"
+    + "<li>"
+    + "Razor Pages (<strong class='code'>Pages/Shared/_Layout.cshtml</strong>):"
+      + "<ul class='file-tree'>"
+      + "<li class='dir empty'>"
+      + "Pages"
+        + "<ul>"
+        + "<li class='d clsd'>"
+        + "Shared"
+          + "<ul>"
+          + "<li>"
+          + "_CookieConsentPartial.cshtml"
+          + "</li>"
+          + "<li class='hl_ylw'>"
+          + "_Layout.cshtml"
+          + "</li>"
+          + "<li>"
+          + "_ValidationScriptsPartial.cshtml"
+          + "</li>"
+          + "</ul>"
+        + "</li>"
+        + "</ul>"
+      + "</li>"
+      + "<li>"
+      + "_ViewImports.cshtml"
+      + "</li>"
+      + "<li>"
+      + "_ViewStart.cshtml"
+      + "</li>"
+      + "</ul>"
+    + "</li>"
+    + "<li>"
+    + "Controller with views (<strong class='code'>Views/Shared/_Layout.cshtml</strong>):"
+      + "<ul class='file-tree'>"
+      + "<li class='dir empty'>"
+      + "Views"
+        + "<ul>"
+        + "<li class='d clsd'>"
+        + "Home"
+        + "</li>"
+        + "<li class='d'>"
+        + "shared"
+          + "<ul>"
+          + "<li>"
+          + "_CookieConsentPartial.cshtml"
+          + "</li>"
+          + "<li class='hl_ylw'>"
+          + "_Layout.cshtml"
+          + "</li>"
+          + "<li>"
+          + "_validationScriptsPartial.cshtml"
+          + "</li>"
+          + "<li>"
+          + "Error.cshtml"
+          + "</li>"
+          + "</ul>"
+        + "</li>"
+        + "<li>"
+        + "_ViewImports.cshtml"
+        + "</li>"
+        + "<li>"
+        + "_ViewStart.cshtml"
+        + "</li>"
+        + "</ul>"
+      + "</li>"
+      + "</ul>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Apps don't require a layout"
+  + "</li>"
+  + "<li>"
+  + "Apps can have more than one layout"
+  + "</li>"
+  + "<li>"
+  + "Views can specify what layout they use"
+  + "</li>"
+  + "<li>"
+  + "Eg. of a layout:"
+  + "<pre class='code html razor-markup'>"
+  + "&lt;!DOCTYPE html&gt;\n"
+  + "&lt;html&gt;\n"
+  + "&lt;head&gt;\n"
+  + "    &lt;meta charset=\"utf-8\" /&gt;\n"
+  + "    &lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" /&gt;\n"
+  + "    &lt;title&gt;@ViewData[\"Title\"] - WebApplication1&lt;/title&gt;\n"
+  + "\n"
+  + "    &lt;environment include=\"Development\"&gt;\n"
+  + "        &lt;link rel=\"stylesheet\" href=\"~/lib/bootstrap/dist/css/bootstrap.css\" /&gt;\n"
+  + "        &lt;link rel=\"stylesheet\" href=\"~/css/site.css\" /&gt;\n"
+  + "    &lt;/environment&gt;\n"
+  + "    &lt;environment exclude=\"Development\"&gt;\n"
+  + "        &lt;link rel=\"stylesheet\" href=\"https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css\"\n"
+  + "              asp-fallback-href=\"~/lib/bootstrap/dist/css/bootstrap.min.css\"\n"
+  + "              asp-fallback-test-class=\"sr-only\" asp-fallback-test-property=\"position\" asp-fallback-test-value=\"absolute\" /&gt;\n"
+  + "        &lt;link rel=\"stylesheet\" href=\"~/css/site.min.css\" asp-append-version=\"true\" /&gt;\n"
+  + "    &lt;/environment&gt;\n"
+  + "&lt;/head&gt;\n"
+  + "&lt;body&gt;\n"
+  + "    &lt;nav class=\"navbar navbar-inverse navbar-fixed-top\"&gt;\n"
+  + "        &lt;div class=\"container\"&gt;\n"
+  + "            &lt;div class=\"navbar-header\"&gt;\n"
+  + "                &lt;button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\"&gt;\n"
+  + "                    &lt;span class=\"sr-only\"&gt;Toggle navigation&lt;/span&gt;\n"
+  + "                    &lt;span class=\"icon-bar\"&gt;&lt;/span&gt;\n"
+  + "                    &lt;span class=\"icon-bar\"&gt;&lt;/span&gt;\n"
+  + "                    &lt;span class=\"icon-bar\"&gt;&lt;/span&gt;\n"
+  + "                &lt;/button&gt;\n"
+  + "                &lt;a asp-page=\"/Index\" class=\"navbar-brand\"&gt;WebApplication1&lt;/a&gt;\n"
+  + "            &lt;/div&gt;\n"
+  + "            &lt;div class=\"navbar-collapse collapse\"&gt;\n"
+  + "                &lt;ul class=\"nav navbar-nav\"&gt;\n"
+  + "                    &lt;li&gt;&lt;a asp-page=\"/Index\"&gt;Home&lt;/a&gt;&lt;/li&gt;\n"
+  + "                    &lt;li&gt;&lt;a asp-page=\"/About\"&gt;About&lt;/a&gt;&lt;/li&gt;\n"
+  + "                    &lt;li&gt;&lt;a asp-page=\"/Contact\"&gt;Contact&lt;/a&gt;&lt;/li&gt;\n"
+  + "                &lt;/ul&gt;\n"
+  + "            &lt;/div&gt;\n"
+  + "        &lt;/div&gt;\n"
+  + "    &lt;/nav&gt;\n"
+  + "\n"
+  + "    &lt;partial name=\"_CookieConsentPartial\" /&gt;\n"
+  + "\n"
+  + "    &lt;div class=\"container body-content\"&gt;\n"
+  + "        @RenderBody()\n"
+  + "        &lt;hr /&gt;\n"
+  + "        &lt;footer&gt;\n"
+  + "            &lt;p&gt;&amp;copy; 2018 - WebApplication1&lt;/p&gt;\n"
+  + "        &lt;/footer&gt;\n"
+  + "    &lt;/div&gt;\n"
+  + "\n"
+  + "    &lt;environment include=\"Development\"&gt;\n"
+  + "        &lt;script src=\"~/lib/jquery/dist/jquery.js\"&gt;&lt;/script&gt;\n"
+  + "        &lt;script src=\"~/lib/bootstrap/dist/js/bootstrap.js\"&gt;&lt;/script&gt;\n"
+  + "        &lt;script src=\"~/js/site.js\" asp-append-version=\"true\"&gt;&lt;/script&gt;\n"
+  + "    &lt;/environment&gt;\n"
+  + "    &lt;environment exclude=\"Development\"&gt;\n"
+  + "        &lt;script src=\"https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js\"\n"
+  + "                asp-fallback-src=\"~/lib/jquery/dist/jquery.min.js\"\n"
+  + "                asp-fallback-test=\"window.jQuery\"\n"
+  + "                crossorigin=\"anonymous\"\n"
+  + "                integrity=\"sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT\"&gt;\n"
+  + "        &lt;/script&gt;\n"
+  + "        &lt;script src=\"https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js\"\n"
+  + "                asp-fallback-src=\"~/lib/bootstrap/dist/js/bootstrap.min.js\"\n"
+  + "                asp-fallback-test=\"window.jQuery && window.jQuery.fn && window.jQuery.fn.modal\"\n"
+  + "                crossorigin=\"anonymous\"\n"
+  + "                integrity=\"sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa\"&gt;\n"
+  + "        &lt;/script&gt;\n"
+  + "        &lt;script src=\"~/js/site.min.js\" asp-append-version=\"true\"&gt;&lt;/script&gt;\n"
+  + "    &lt;/environment&gt;\n"
+  + "\n"
+  + "    @RenderSection(\"Scripts\", required: false)\n"
+  + "&lt;/body&gt;\n"
+  + "&lt;/html&gt;"
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r21-2'><em>Specifying a Layout</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "Razor Pages specify the layout file to use via their <strong class='code'>"
+  + "Layout Property</strong>, eg.:"
+  + "<pre class='code html razor-markup'>"
+  + "@{\n"
+  + "  Layout = \"_Layout\";\n"
+  + "}"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Layout can be specified as a full path, eg.:"
+  + "<pre class='code'>"
+  + "/Pages/Shared/_Layout.cshtml\n"
+  + "or\n"
+  + "/Views/Shared/_Layout.cshtml"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Layout can be specified as a partial name, eg.:<br>"
+  + "<strong class='code'>_Layout</strong>"
+  + "</li>"
+  + "<li>"
+  + "If only a partial name is provided, it will be searched for in several "
+  + "specific spaces:"
+    + "<ol>"
+    + "<li>"
+    + "The folder where the handler method or controller is located"
+    + "</li>"
+    + "<li>"
+    + "The <strong class='code'>Shared</strong> folder"
+    + "</li>"
+    + "</ol>"
+  + "</li>"
+  + "<li>"
+  + "Each layout must call <strong class='code razor-markup'>@RenderBody()</strong>"
+  + "</li>"
+  + "<li>"
+  + "Contents of a view or page will be placed wherever the "
+  + "<strong class='code razor-markup'>@RenderBody()</strong> call is made"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r21-2a'><em>Sections</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "A layout can use <strong>Sections</strong> to render parts of itself"
+  + "</li>"
+  + "<li>"
+  + "Sections are rendered by calling <strong class='code razor-markup'>"
+  + "@RenderSection()</strong>"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code razor-markup'>@RenderSection()</strong> call is "
+  + "given parameters to specify the name of the section to render and if it is "
+  + "required to render the section"
+  + "</li>"
+  + "<li>"
+  + "An exception is thrown if a required section isn't found"
+  + "</li>"
+  + "<li>"
+  + "Sections are defined in the page or view they are rendered on with the "
+  + "<strong class='code razor-markup'>@section()</strong> declaration"
+  + "</li>"
+  + "<li>"
+  + "If a view/page defines a section, it must be rendered or an error will occur"
+  + "</li>"
+  + "<li>"
+  + "If a page/view does not want to use a section, it simply doesn't define it, and "
+  + "as long as it isn't listed as <strong class='code'>required</strong> in the "
+  + "layout file, it should not cause an issue"
+  + "</li>"
+  + "<li>"
+  + "Sections defined in a page/view are not available to be referenced by "
+  + "other partials, view components, or other parts of the view system"
+  + "</li>"
+  + "<li>"
+  + "Eg. call to <strong class='code razor-markup'>@RenderSection()</strong> in "
+  + "the layout file:"
+  + "<pre class='code html razor-markup'>"
+  + "&lt;script type=\"text/javascript\" src=\"~/scripts/global.js\"&gt;&lt;/script&gt;\n\n"
+  + "@RenderSection(\"Scripts\", required: false)"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Eg. the section definition in the view page <strong class='code'>scripts/main.js</strong>:"
+  + "<pre class='code html razor-markup'>"
+  + "@section Scripts {\n"
+  + "  &lt;script type=\"text/javascript\" src=\"~/scripts/main.js\"&gt;&lt;/script&gt;\n"
+  + "}"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Eg. generate the script via the <strong class='code'>Partial Tag Helper</strong>:"
+  + "<pre class='code html razor-markup'>"
+  + "@section Scripts {\n"
+  + "  &lt;partial name=\"_ValidationScriptsPartial\" /&gt;\n"
+  + "}"
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r21-2b'><em>Ignoring sections</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "All sections and the body of a page/view must be rendered in the layout page "
+  + "(default behavior)"
+  + "</li>"
+  + "<li>"
+  + "The body can be ignored with the <strong class='code razor-markup'>@IgnoreBody()</strong> "
+  + "method"
+  + "</li>"
+  + "<li>"
+  + "A section can be ignored with the <strong class='code razor-markup'>@IgnoreSection()</strong> "
+  + "method"
+  + "</li>"
+  + "<li>"
+  + "Every section in a Razor Page must be rendered or ignored"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r21-3'><em>Importing Shared Directives</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "Razor Directives (eg. Namespace import  directives) can be shared by "
+  + "multiple views/pages via the <strong class='code'>_ViewImports.cshtml</strong> "
+  + "file"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>_ViewImports</strong> file supports:"
+    + "<ul>"
+    + "<li class='code razor-markup'>"
+    + "@addTagHelper"
+    + "</li>"
+    + "<li class='code razor-markup'>"
+    + "@removeTagHelper"
+    + "</li>"
+    + "<li class='code razor-markup'>"
+    + "@tagHelperPrefix"
+    + "</li>"
+    + "<li class='code razor-markup'>"
+    + "@using"
+    + "</li>"
+    + "<li class='code razor-markup'>"
+    + "@model"
+    + "</li>"
+    + "<li class='code razor-markup'>"
+    + "@inherits"
+    + "</li>"
+    + "<li class='code razor-markup'>"
+    + "@inject"
+    + "</li>"
+    + "<li class='code razor-markup'>"
+    + "@namespace"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>_ViewImports</strong> file does Not support "
+  + "other Razor features eg. functions or section definitions"
+  + "</li>"
+  + "<li>"
+  + "Eg. of a <strong class='code'>_ViewImports.cshtml</strong> file:"
+  + "<pre class='code razor-markup'>"
+  + "@using WebApplication1\n"
+  + "@using WebApplication1.Models\n"
+  + "@using WebApplication1.Models.AccountViewModels\n"
+  + "@using WebApplication1.Models.ManageViewModels\n"
+  + "@using Microsoft.AspNetCore.Identity\n"
+  + "@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers\n"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>_ViewImports</strong> is usually placed in the "
+  + "<strong class='code'>Pages</strong> or <strong class='code'>Views</strong> "
+  + "directory"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>_ViewImports</strong> can be placed in any folder "
+  + "but will only be applied to pages/views in that directory/subdirectories"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>_ViewImports</strong> is processed starting from the "
+  + "root directory all the way to the directory containing the view/page itself"
+  + "</li>"
+  + "<li>"
+  + "The root directory <strong class='code'>_ViewImports</strong> file can be "
+  + "overridden"
+  + "</li>"
+  + "<li>"
+  + "When using multiple <strong class='code'>_ViewImports</strong> files, "
+  + "directives have the following behaviors:"
+    + "<ul>"
+    + "<li>"
+    + "<strong class='code razor-markup'>@addTagHelper</strong> and "
+    + "<strong class='code razor-markup'>@removeTagHelper</strong>: all run "
+    + "in order"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code razor-markup'>@tagHelperPrefix</strong>: closest directive "
+    + "to the page/view overrides all others"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code razor-markup'>@model</strong>: closest directive to the "
+    + "page/view overrides all others"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code razor-markup'>@inherits</strong>: closest directive to the "
+    + "page/view overrides all others"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code razor-markup'>@using</strong>: all directives included/"
+    + "combined, duplicate calls ignored"
+    + "</li>"
+    + "<li>"
+    + "<strong class='code razor-markup'>@inject</strong>: for each property, closest "
+    + "one to the page/view overrides all others with the same property name"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r21-4'><em>Running Code Before Each View</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "Code that is meant to run before each page/view should be placed in the "
+  + "<strong class='code'>_ViewStart.cshtml</strong> file"
+  + "</li>"
+  + "<li>"
+  + "The <strong class='code'>_ViewStart.cshtml</strong> file is usually placed in "
+  + "the <strong class='code'>Pages</strong> or <strong class='code'>Views</strong> "
+  + "directory"
+  + "</li>"
+  + "<li>"
+  + "The code placed in the <strong class='code'>_ViewStart.cshtml</strong> file is "
+  + "run before every <em>full</em> view (ie. seems to imply not before just the "
+  + "layout nor just the partial view, but the full combined view)"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code'>_ViewStart.cshtml</strong> is hierarchical similar to the "
+  + "<strong class='code'>_ViewImports.cshtml</strong> file"
+  + "</li>"
+  + "<li>"
+  + "Also similar to the <strong class='code'>_ViewImports</strong>, "
+  + "In the case of multiple <strong class='code'>_ViewStart.cshtml</strong> files, "
+  + "they are run starting from the root up to the one in the page/view directory last"
+  + "</li>"
+  + "<li>"
+  + "Eg. of a <strong class='code'>_ViewStart.cshtml</strong> file:"
+  + "<pre class='code html razor-markup'>"
+  + "@{\n"
+  + "    Layout = \"_Layout\";\n"
+  + "}"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "App-level versions of the <strong class='code'>_ViewImports.cshtml</strong> and "
+  + "the <strong class='code'>_ViewStart.cshtml</strong> files should be placed directly in "
+  + "the <strong class='code'>/Pages</strong> or <strong class='code'>/Views</strong> "
+  + "directory (ie. <em>NOT</em> the <strong class='code'>/Pages/Shared</strong> or "
+  + "<strong class='code'>/Views/Shared</strong> directories)"
+  + "</li>"
+  + "</ul>"
+  );
+  //END R21 Reading 14
+  
+  //R22 (reading 15)
+  add_note("<h3 id='r22'>Article: <em> ASP.NET Razor Pages vs MVC: How do Razor Pages Fit in Your Toolbox?</em></h3>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "https://stackify.com/asp-net-razor-pages-vs-mvc/"
+  + "'>stackify.com</a>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r22-1'><em>The Basics: What are ASP.NET Razor Pages?</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "Razor Pages are similar to the view component of ASP.NET MVC"
+  + "</li>"
+  + "<li>"
+  + "Key difference is that Model and Controller code are also included with "
+  + "the Razor Page"
+  + "</li>"
+  + "<li>"
+  + "Razor Pages are more of an \"<strong>MVVM</strong>\" (<strong>Model-View-"
+  + "ViewModel</strong>) Framework"
+  + "</li>"
+  + "<li>"
+  + "Eg. of a Razor Page with its model code included in the page instead of "
+  + "being placed in a separate file:"
+  + "<pre class='code html razor-markup'>"
+  + "@page\n"
+  + "@model IndexModel\n"
+  + "@using Microsoft.AspNetCore.Mvc.RazorPages\n"
+  + "\n"
+  + "@functions {\n"
+  + "    <span class='dclr'>public class</span> <span class='dclr-c'>"
+  + "IndexModel</span> : <span class='dclr-c'>PageModel</span>\n"
+  + "    {\n"
+  + "        <span class='dclr'>public string</span> Message { <span class='gttr'>get"
+  + "</span>; <span class='dclr'>private</span> <span class='sttr'>set</span>; "
+  + "} = <span class='str'>\"In page model: \"</span>;\n"
+  + "\n"
+  + "        <span class='dclr'>public void</span> OnGet()\n"
+  + "        {\n"
+  + "            Message += <span class='str'>$\" Server seconds  </span>{ "
+  + "DateTime.Now.Second.ToString() }<span class='str'>\"</span>;\n"
+  + "        }\n"
+  + "    }\n"
+  + "}\n"
+  + "\n"
+  + "<span class='html razor-markup'>&lt;h2&gt;In page sample&lt;/h2&gt;\n"
+  + "&lt;p&gt;\n"
+  + "    @Model.Message\n"
+  + "&lt;/p&gt;</span>\n"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + ""
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r22-1a'><em>We Have Two Choices Now: ASP.NET MVVM or MVC</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "MVVM frameworks like Razor Pages are most noted for \"Two-way data binding "
+  + "of the data model\""
+  + "</li>"
+  + "<li>"
+  + "MVC works will with single-page apps, Rest APIs and AJAX calls"
+  + "</li>"
+  + "<li>"
+  + "Razor Pages or good for simple pages that are read only or do basic data input"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r22-2'><em>Pros and Cons of Razor Pages</em></h4>"
+  + "<p>"
+  + "Pros and Cons of using Razor Pages (MVVM) Vs Traditional MVC"
+  + "</p>"
+  + "<ul>"
+  + "<li>"
+  + "Pro: More organized and less magical"
+    + "<ul>"
+    + "<li>"
+    + "MVC has a learning curve on how everything functions together eg. dynamic "
+    + "routes, function names, etc."
+    + "</li>"
+    + "<li>"
+    + "Razor Pages just have the view file and the model file"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Pro: Single Responsibility"
+    + "<ul>"
+    + "<li>"
+    + "Ie. Each model file is only for one Razor Page"
+    + "</li>"
+    + "<li>"
+    + "Ie. MVC Controller class can become bloated as it is for all the views"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Con: Requires New Learning "
+    + "<ul>"
+    + "<li>"
+    + "Ie. its different from MVC if you already understand/use that"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Con: Limitations for Complex Scenarios"
+    + "<ul>"
+    + "<li>"
+    + "Razor Pages is better for simple pages/less complex needs"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='r22-2a'><em>Pros and Cons of MVC</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "Pro: Flexibility"
+    + "<ul>"
+    + "<li>"
+    + "Works for a variety of situations/needs"
+    + "</li>"
+    + "<li>"
+    + "Works well for: "
+      + "<ul>"
+      + "<li>"
+      + "Apps with many dynamic server views"
+      + "</li>"
+      + "<li>"
+      + "Singe-Page Apps"
+      + "</li>"
+      + "<li>"
+      + "REST APIs"
+      + "</li>"
+      + "<li>"
+      + "AJAX calls"
+      + "</li>"
+      + "</ul>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Pro: Familiarity"
+    + "<ul>"
+    + "<li>"
+    + "Has been around for a while, many developers understand how to use/build it"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Con: Complexity"
+    + "<ul>"
+    + "<li>"
+    + "Can be more complex to develop, especially for new beginners unfamiliar with "
+    + "its ins and outs"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Con: Risk of Bloated Controllers"
+    + "<ul>"
+    + "<li>"
+    + "Everything gets put in the same controller class"
+    + "</li>"
+    + "<li>"
+    + "Over time the controller can become bloated/harder to maintain/debug code"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='r22-3'><em>Using Multiple GET or POST Actions via Handlers</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "Default is for Razor Pages to only have one GET and one POST method"
+  + "</li>"
+  + "<li>"
+  + "To have multiple different actions for GET or POST requests you need to "
+  + "implement them using <strong>Handlers</strong>"
+  + "</li>"
+  + "<li>"
+  + "Handlers just seem to be differently named GET/POST methods, eg:"
+  + "<pre class='code'>"
+  + "The default GET/POST handlers are named:\n"
+  + "OnGetAsync()\n"
+  + "OnGet()\n"
+  + "OnPostAsync()\n"
+  + "OnPost()\n\n"
+  + "New custom handlers seem to be named:\n"
+  + "OnGet_MyCustomHandlerName_Async()\n"
+  + "OnGet_MyCustomHandlerName()\n"
+  + "OnPost_MyCustomHandlerName_Async()\n"
+  + "OnPost_MyCustomHandlerName()\n\n"
+  + "Eg.:\n"
+  + "OnGetHelloWorldAsync()"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Handlers are then invoked using that unique part of their handler method name"
+  + "</li>"
+  + "<li>"
+  + "Seems to be three ways to invoke handlers:"
+    + "<ul>"
+    + "<li>"
+    + "Query strings, eg:"
+    + "<pre class='code'>"
+    + "/path_to_page/page_name?handler=UniqueHandlerName"
+    + "</pre>"
+    + "</li>"
+    + "<li>"
+    + "As a route, ie:"
+    + "<pre class='code'>"
+    + "Use an <span class='razor-markup'>@page \"{handler?}\"</span> directive "
+    + "in the razor view\n"
+    + "Access the handler via a url:\n"
+    + "/path_to_page/page_name/UniqueHandlerName"
+    + "</pre>"
+    + "</li>"
+    + "<li>"
+    + "Use a tag-helper in your submit button in the Razor Page View, eg:"
+    + "<pre class='code html'>"
+    + "In the razor page form:\n"
+    + "&lt;input type=\"submit\" asp-page-handler=\"UniqueHandlerName\" "
+    + "value=\"Submit\" /&gt;"
+    + "</pre>"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "</ul>"
+  );
+  //END R22 (reading 15)
+  
+  //Q7
+  add_note("<h3 id='q7'>Week 07 Quiz</h3>"
+  + "<ul>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "../w07/quizzes/W07_Quiz__.NET_Software_Development.html"
+  + "'>Quiz Week 07</a>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='q7-1-X'><em>The <strong class='code razor-markup html'>@Request.Form[]</strong> Declaration</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "When in a <em>PostBack</em> state, ie. return of a form on failed "
+  + "submission, you can access the form element values that were submitted "
+  + "so that the user doesn't need to fill them back in"
+  + "</li>"
+  + "<li>"
+  + "Values are accessible from the <strong class='code razor-markup'>"
+  + "@Request.Form['formElementName']</strong> declaration, eg.:"
+  + "<pre class='code html razor-markup'>"
+  + "&lt;input type=\"text\" name=\"zipcode\" value=\"@Request.Form[\"zipcode\"]\" /&gt;"
+  + "</pre>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h5 id='q7-2'><em>Validation.IsValid</em></h5>"
+  + "<ul>"
+  + "<li>"
+  + "You can access the results of ASP.NET Validation via the <strong class='code'>Validation.IsValid</strong> property"
+  + "</li>"
+  + "<li>"
+  + "<strong class='code'>Validation.IsValid</strong> returns true if all fields validate "
+  + "correctly, and false if any field fails to validate"
+  + "</li>"
+  + "<li>"
+  + "Additional REF: <a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/web-pages/overview/ui-layouts-and-themes/4-working-with-forms"
+  + "'>learn.microsoft.com</a>"
+  + "</li>"
+  + "</ul>"
+  );
+  //END Q7 (week 07 quiz)
+  
+  //A5
+  add_note("<h3 id='a5'>Assignment 05: <em>My Scripture Journal</em></h3>"
+  + ""
+  
+  + "<h4 id='a5-1'><em>Instructions</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "../w07/assignments/W07_Assignment__My_Scripture_Journal.html"
+  + "'>Main Instructions</a>"
+  + "</li>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "https://learn.microsoft.com/en-us/aspnet/core/tutorials/razor-pages/?view=aspnetcore-7.0"
+  + "'>Tutorial at learn.microsoft.com</a>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='a5-2'><em>Files</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "<a target='_blank' href='"
+  + "../github/w07"
+  + "'>Files</a>"
+  + "</li>"
+  + "</ul>"
+  
+  + "<h4 id='a5-3'><em>Notes</em></h4>"
+  + "<ul>"
+  + "<li>"
+  + "It is important to note that the methods used with the lambda functions "
+  + "are \"non-manipulative\" functions, ie. they do not alter the object they are "
+  + "called on, but instead return a new version of the object with the specified changes/"
+  + "aggregation/filtering/etc., eg.:"
+  + "<pre class='code'>"
+  + "<span class='comment'>//Get a selection of items from a db:</span>\n"
+  + "<span class='dclr'>var</span> items = <span class='qcode'>from</span> m <span class='qcode'>in</span> _context.ItemClassName\n"
+  + "            <span class='qcode'>select</span> m;\n\n"
+  + "<span class='comment'>//Eg. a filtering function that returns the filtered results</span>\n"
+  + "<span class='hl_ylw'>items = </span>items.Where(i => i.SomeStrProperty == SomeSearchString);\n\n"
+  + "<span class='comment'>//Eg. an ordering function that returns the ordered results</span>\n"
+  + "<span class='hl_ylw'>items = </span>items.OrderBy(i => i.SomeSortableField);"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "Some other useful functions:"
+    + "<ul class='code'>"
+    + "<li>"
+    + "Contains()"
+    + "</li>"
+    + "<li>"
+    + "Where()"
+    + "</li>"
+    + "<li>"
+    + "OrderBy()"
+    + "</li>"
+    + "</ul>"
+  + "</li>"
+  + "<li>"
+  + "Note that the project seems to have bootstrap baked in by default, so when "
+  + "it comes to stylizing that hot garbage mess it was easier to write an "
+  + "overloading style sheet and override the styles I wanted to change"
+  + "</li>"
+  + "<li>"
+  + "This is easy enough to do: just check what elements you want to change "
+  + "the style of using the web inspector in Chrome to view their styling properties"
+  + "</li>"
+  + "<li>"
+  + "Then write an overriding style in you style sheet"
+  + "</li>"
+  + "<li>"
+  + "I used the <strong class='code'>/wwwroot/css/site.css</strong> style sheet"
+  + "</li>"
+  + "<li>"
+  + "I also changed the <strong class='code'>_Layout</strong> file to make sure that "
+  + "the <strong class='code'>site.css</strong> style sheet was loaded last"
+  + "</li>"
+  + "</ul>"
+  );
+  //END A5 ASSIGNMENT 05 
+  
+  //PREV/CURR: R22 (Reading 15) //A4
   
   //week note template *********DO NOT EDIT**********************
   add_note("<h2 id='w0X'>Week 0X</h2>");
@@ -12771,34 +14495,7 @@
                       <h3><a href="#a4-3j"><em>Adding a New Field to a Database</em></a></h3>
                     </li>
                     <li>
-                      <h3><a href="#a4-3k"><em>Adding Validation</em></a></h3>sdsdsdsdsdsdsd
-                    </li>
-                    <li>
-                      <h3><a href="#a4-3"><em>Subsection_or_subheading_title_here</em></a></h3>
-                    </li>
-                    <li>
-                      <h3><a href="#a4-3"><em>Subsection_or_subheading_title_here</em></a></h3>
-                    </li>
-                    <li>
-                      <h3><a href="#a4-3"><em>Subsection_or_subheading_title_here</em></a></h3>
-                    </li>
-                  </ul>
-                  <!--end chapter/article list-->
-                </li>
-                <li>
-                  <h3><a href="#a4-4"><em>Chapter_title_here</em></a></h3>
-                  <ul>
-                    <li>
-                      <h3><a href="#a4-4a"><em>Subsection_or_subheading_title_here</em></a></h3>
-                    </li>
-                    <li>
-                      <h3><a href="#a4-4a"><em>Subsection_or_subheading_title_here</em></a></h3>
-                    </li>
-                    <li>
-                      <h3><a href="#a4-4a"><em>Subsection_or_subheading_title_here</em></a></h3>
-                    </li>
-                    <li>
-                      <h3><a href="#a4-4a"><em>Subsection_or_subheading_title_here</em></a></h3>
+                      <h3><a href="#a4-3k"><em>Adding Validation</em></a></h3>
                     </li>
                   </ul>
                   <!--end chapter/article list-->
@@ -12806,47 +14503,211 @@
               </ul>
               <!--END READING LIST-->
             </li>
-            <!--END READING TEMPLATE-->
-            
-            <!--READING TEMPLATE-->
-            <li>
-              <h2>Reading 0x: </h2>
-              <ul>
-                <li>
-                  <h3><a href="#rx">Chz <em>Chapter_title_here</em></a></h3>
-                  <ul>
-                    <li>
-                      <h3><a href="#rx-y">z.y <em>Subsection_or_subheading_title_here</em></a></h3>
-                    </li>
-                  </ul>
-                  <!--end chapter/article list-->
-                </li>
-              </ul>
-              <!--END READING LIST-->
-            </li>
-            <!--END READING TEMPLATE-->
-            
-            <!--READING TEMPLATE-->
-            <li>
-              <h2>Reading 0x: </h2>
-              <ul>
-                <li>
-                  <h3><a href="#rx">Chz <em>Chapter_title_here</em></a></h3>
-                  <ul>
-                    <li>
-                      <h3><a href="#rx-y">z.y <em>Subsection_or_subheading_title_here</em></a></h3>
-                    </li>
-                  </ul>
-                  <!--end chapter/article list-->
-                </li>
-              </ul>
-              <!--END READING LIST-->
-            </li>
-            <!--END READING TEMPLATE-->
+            <!--END Assignment 04-->
           </ul>
         </li>
         <!--END WEEK 06-->
         
+        <!--Week 07-->
+        <li>
+          <h1><a href="#w07">Week 07</a></h1>
+          <ul>
+          
+            <!--READING TEMPLATE r20-->
+            <li>
+              <h2>Reading 13: Sessions and App State in ASP.NET Core</h2>
+              <!--r20-list-->
+              <ul>
+                <!--r20 template -->
+                <li>
+                  <h3><a href="#r20">Article: <em>Session and state management in ASP.NET Core</em></a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#r20-1"><em>State management</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-1a"><em>SignalR/Blazor Server and HTTP context-based state management</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-1b"><em>Cookies</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-1c"><em>Session state</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-1d"><em>Configure session state</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-1e"><em>Load session state asynchronously</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-1f"><em>Session options</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-1g"><em>Set and get Session values</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-2"><em>TempData</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-2a"><em>Configure the TempData provider</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-3"><em>Query strings</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-4"><em>Hidden fields</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-5"><em><strong class='code'>HttpContext.Items</strong></em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-6"><em>Cache</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-7"><em>Checking session state</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r20-8"><em>Common errors</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+                <!--end rx template-->
+              </ul>
+              <!--END R20 LIST-->
+            </li>
+            <!--END R20, reading 13-->
+          
+            <!--READING TEMPLATE r21-->
+            <li>
+              <h2>Reading 14: Layout in ASP.NET Core</h2>
+              <!--r21-list-->
+              <ul>
+                <!--r21 template (li->ch in text or article-->
+                <li>
+                  <h3><a href="#r21">Article: <em>Layout in ASP.NET Core</em></a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#r21-1"><em>What is a Layout</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r21-2"><em>Specifying a Layout</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r21-2a"><em>Sections</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r21-2b"><em>Ignoring sections</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r21-3"><em>Importing Shared Directives</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r21-4"><em>Running Code Before Each View</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+                <!--end r21 template-->
+              </ul>
+              <!--END READING LIST-->
+            </li>
+            <!--END R21/READING 14-->
+          
+            <!--READING TEMPLATE r22-->
+            <li>
+              <h2>Reading 15: ASP.NET Razor Pages vs MVC: How do Razor Pages Fit in Your Toolbox?</h2>
+              <!--r22-list-->
+              <ul>
+                <!--rx\22-->
+                <li>
+                  <h3><a href="#r22">Article: <em>ASP.NET Razor Pages vs MVC: How Do Razor Pages Fit in Your Toolbox?</em></a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#r22-1"><em>The Basics: What are ASP.NET Razor Pages?</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r22-1a"><em>We Have Two Choices Now: ASP.NET MVVM or MVC</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r22-2"><em>Pros and Cons of Razor Pages</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r22-2a"><em>Pros and Cons of MVC</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#r22-3"><em>Using Multiple GET or POST Actions via Handlers</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+                <!--end r22 template-->
+              </ul>
+              <!--END READING LIST-->
+            </li>
+            <!--END R22 READING 15-->
+          
+            <!--READING TEMPLATE rx-->
+            <li>
+              <h2>Quiz 07: </h2>
+              <!--q7-list-->
+              <ul>
+                <!--q7 template (li->ch in text or article-->
+                <li>
+                  <h3><a href="#q7">Week 07 Quiz</a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#q7-1"><em>The <strong class='code razor-markup html'>@Request.Form[]</strong> Declaration</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#q7-2"><em>Validation.IsValid</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+                <!--end q7 template-->
+              </ul>
+              <!--END READING LIST-->
+            </li>
+            <!--END q7-->
+            
+            <!--A5-->
+            <li>
+              <h2>Assignment 05: </h2>
+              <ul>
+                <li>
+                  <h3><a href="#a5">Assignment: <em>My Scripture Journal</em></a></h3>
+                  <ul>
+                    <li>
+                      <h3><a href="#a5-1"><em>Instructions</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#a5-2"><em>Files</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#a5-3"><em>Notes</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#a5-4"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#a5-5"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                    <li>
+                      <h3><a href="#a5-y"><em>Subsection_or_subheading_title_here</em></a></h3>
+                    </li>
+                  </ul>
+                  <!--end chapter/article list-->
+                </li>
+              </ul>
+              <!--END READING LIST-->
+            </li>
+            <!--END A5-->
+            
+          </ul>
+        </li>
+        <!--END WEEK 07 (R20-reading 13/)-->
         
         
         <!--rules for new rx++, a++, or new list items in each ul:
