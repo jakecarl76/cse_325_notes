@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>CSE 325 .NET Software Development Notes</title>
+  <style>
+    :root
+    {
+    }
+    header
+    {
+      background-color: cornflowerblue;
+      color: white;
+      padding: 1em;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5
+    {
+      font-family: sans-serif;
+    }
+    p,
+    li
+    {
+      max-width:30em;
+      margin-top: 0.4em;
+    }
+    
+    table
+    {
+      margin: 0.5em;
+    }
+    tr:nth-child(even)
+    {
+      background-color:lightgrey;
+    }
+    td
+    {
+      padding-right: 1em;
+    }
+    .main_wrapper
+    {
+      display: grid;
+      grid-template-columns: var(--contents-width) 1fr;
+      min-height: 100vh;
+    }
+    .contents
+    {
+      font-family: sans-serif;
+      max-width: var(--contents-width);
+      overflow: auto;
+      max-height: 100vh;
+      position: fixed;      
+      padding-left: 0.5em;
+    }
+    .contents ul
+    {
+      padding-left: 0.75em;
+    }
+    .contents h1
+    {
+      font-size: 1.5em;
+    }
+    .contents h2
+    {
+      font-size: 1.3em;
+    }
+    .contents h3
+    {
+      font-size: 1rem;
+    }
+    .contents h4
+    {
+      font-size: 0.75rem;
+    }
+    .contents h5
+    {
+      font-size: 0.5rem;
+    }
+    
+    .notes-display
+    {
+      padding-left: 2em;
+      grid-column: 2;
+    }
+    
+    .input-p
+    {
+      min-height: 100%;
+      min-width: 80%
+    }
+    
+    /* File tree system:
+         > Ul element gets ft class
+         > all unlabeled (un-classed) li elements get a file emoji
+         > empty dir classed li get closed dir emoji
+         > for a dir classed li with a name, used closed/clsd/empty class if has no contents (child uls)
+    */
+    
+    .ft > li,
+    .file-tree li
+    {
+      list-style: "\1F4C4";/*fileemoji (face up paper emoji)*/
+      padding-left: 0.25em;
+    }
+    
+    .ft > li.d,
+    .ft > li.dir,
+    .file-tree li.d,
+    .file-tree li.dir
+    {
+      list-style: "\1F4C2";/*open dir emoji*/
+    }
+    
+    .ft > li.d:empty,
+    .ft > li.dir:empty,
+    .file-tree li.d:empty,
+    .file-tree li.dir:empty
+    {
+      list-style: "\1F4C1";/*closed dir emoji*/
+    }
+    
+    .ft > li.d.closed,
+    .ft > li.d.clsd,
+    .ft > li.d.empty,
+    .ft > li.dir.closed,
+    .ft > li.dir.clsd,
+    .ft > li.dir.empty,
+    .file-tree li.d.closed,
+    .file-tree li.d.clsd,
+    .file-tree li.d.empty,
+    .file-tree li.dir.closed,
+    .file-tree li.dir.clsd,
+    .file-tree li.dir.empty
+    {
+      list-style: "\1F4C1";/*closed dir emoji*/
+    }
+    /*END FILE TREE SYSTEM STYLE */
+    
+    
+    .code
+    {
+      font-family: monospace;
+    }
+    
+    .hl_yellow,
+    .hl_ylw
+    {
+      background-color: yellow;
+    }
+    .centered
+    {
+      text-align: center;
+    }
+    .hidden
+    {
+      display: none;
+    }
+  </style>
+  
+<script>
+  function replace_text()
+  {
+    //get settings
+    let amp_to_ent = document.getElementById('rep_0').checked;
+    let lt_to_ent = document.getElementById('rep_1').checked;
+    let gt_to_ent = document.getElementById('rep_2').checked;
+    let qt_to_escp = document.getElementById('rep_3').checked;
+    
+    let prfx_sp_pls_qt = document.getElementById('rep_4').checked;
+    let num_spaces_prfx_1 = Number(document.getElementById('rep_4b').value);
+    
+    let sfx_nl_qt = document.getElementById('rep_5').checked;
+    let sp_gtt_stt_class = document.getElementById('rep_06').checked;//special getter setter class
+    let sp_att_class = document.getElementById('rep_07').checked;//special att class
+    let sp_using_class = document.getElementById('rep_08').checked;//special using class
+    let sp_str_class = document.getElementById('rep_09').checked;//special string class
+    
+    //get text
+    let in_el = document.getElementById("text_input");
+    let the_text = in_el.value;
+    
+    //perform replacements:
+    //AMP (&) (must do first before others)
+    if(amp_to_ent)
+    {
+      the_text = the_text.replaceAll("&", "&amp;");
+    }
+    //LT (<)
+    if(lt_to_ent)
+    {
+      the_text = the_text.replaceAll("<", "&lt;");
+    }
+    //GT (>)
+    if(gt_to_ent)
+    {
+      the_text = the_text.replaceAll(">", "&gt;");
+    }
+    //QUOTES (")
+    if(qt_to_escp)
+    {
+      the_text = the_text.replaceAll("\"", "\\\"");
+    }
+    //prefix num_spaces plus quote (\s + ")
+    if(prfx_sp_pls_qt)
+    {
+      //make white space string:
+      let ws = "";
+      for(let i = 0; i < num_spaces_prfx_1; i++)
+        ws += " ";
+      
+      //split the text by lines (\n)
+      let tmp_lines = the_text.split("\n");
+      
+      //recombine but add postfix and replace \n at end of line
+      the_text = "";
+      for(let i = 0; i < tmp_lines.length; i++)
+      {
+        the_text += ws + "+ \"" + tmp_lines[i] + "\n";
+      }
+      
+    }
+    //END PREFIX (\s + ")
+    
+    //SUFFX (\n")
+    if(sfx_nl_qt)
+    {
+      the_text = the_text.replaceAll("\n", "\\n\"\n");
+    }
+    //GETTER/SETTER Classes (CSE 325 Notes)
+    if(sp_gtt_stt_class)
+    {
+      the_text = the_text.replaceAll("{ get; set; }", "{ <span class='gttr'>get</span>; <span class='sttr'>set</span>; }");
+    }
+    //C# Att Classes (CSE 325 Notes)
+    if(sp_att_class)
+    {
+      the_text = the_text.replaceAll("[", "[<span class='dclr-c'>");
+      the_text = the_text.replaceAll("]", "</span>]");
+    }
+    //C# Att Classes (CSE 325 Notes)
+    if(sp_using_class)
+    {
+      the_text = the_text.replaceAll(/(\s*)(using)/g, "$1<span class='using'>using</span>");
+    }
+    //C# Att Classes (CSE 325 Notes)
+    if(sp_str_class)
+    { console.log("poo");
+      the_text = the_text.replaceAll(/([@|$]*\\"[^\n"]*\\")/g, "<span class='str'>$1</span>");
+    }
+    
+    //replace text in paragraph
+    //console.log(the_text);
+    in_el.value = the_text;
+  }
+  //END FUNC REPLACE TEXT
+</script>
+</head>
+<body>
+  <header>
+    <h1 class="centered">CSE 325 .NET Software Development Notes</h1>
+  </header>
+  <div class="main_wrapper">
+  
+    <div id="contents_table" class="contents">
+      <ul id="weeks_contents">
+        <li>
+          <input id="rep_0" type="checkbox" >
+          <label for="rep_0">&amp; to Entity</label>
+        </li>
+        <li>
+          <input id="rep_1" type="checkbox" checked>
+          <label for="rep_1">&lt; to Entity</label>
+        </li>
+        <li>
+          <input id="rep_2" type="checkbox" checked>
+          <label for="rep_2">&gt; to Entity</label>
+        </li>
+        <li>
+          <input id="rep_3" type="checkbox" checked>
+          <label for="rep_3">" to \"</label>
+        </li>
+        <li>
+          <input id="rep_4" type="checkbox">
+          <label for="rep_4">Prefix:(num_s)+ "</label>
+          <br>
+          <label for="rep_4b">Number of Spaces to Indent(num_s):</label>
+          <br>
+          <input id="rep_4b" type="number" value="2">
+        </li>
+        <li>
+          <input id="rep_5" type="checkbox">
+          <label for="rep_5">Suffix:\n"$</label>
+        </li><!--
+        <li>
+          <input id="rep_" type="checkbox">
+          <label for="rep_"></label>
+        </li> -->
+        <!--Specific css class/span replacements for CS 325 -->
+        <li>
+          <input id="rep_06" type="checkbox">
+          <label for="rep_06">(C#) "{ get; set; }" with &lt;span&gt; classes</label>
+        </li>
+        <li>
+          <input id="rep_07" type="checkbox">
+          <label for="rep_07">(C#ATT) [-&gt;[&lt;span... &amp; ]-&gt;&lt;/span&gt;]"</label>
+        </li>
+        <li>
+          <input id="rep_08" type="checkbox">
+          <label for="rep_08">(C#) Using spans</label>
+        </li>
+        <li>
+          <input id="rep_09" type="checkbox">
+          <label for="rep_09">(C#) string spans</label>
+        </li>
+        <li>
+          <input id="rep_" type="checkbox">
+          <label for="rep_"></label>
+        </li>
+        <li>
+        
+        </li>
+        <li>
+          <input type="button" value="Replace All" onclick="replace_text();">
+        </li>
+      </ul>
+    </div>
+    <!-- END TABLE OF CONTENTS-->
+    
+    <div id="main_display" class="notes-display">
+      <!-- Editable element method: //(didn't use because </> entities would show as </> not &lt;/&gt;)
+      <p id='text_input' class='input-p code' contenteditable='plaintext-only'>
+      -->
+      <textarea id='text_input' class='input-p code'></textarea>
+    
+    
+      <script>
+      </script>
+    </div>
+    <!--END MAIN DISPLAY-->
+    
+  </div>
+  <!--END MAIN WRAPPER-->
+</body>
+</html>
