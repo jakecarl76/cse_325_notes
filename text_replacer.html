@@ -177,6 +177,16 @@
     let sp_att_class = document.getElementById('rep_07').checked;//special att class
     let sp_using_class = document.getElementById('rep_08').checked;//special using class
     let sp_str_class = document.getElementById('rep_09').checked;//special string class
+    let sp_dclr_class = document.getElementById('rep_10').checked;//special dclr class
+    let sp_async_await_class = document.getElementById('rep_11').checked;//special kw class
+    let sp_if_el_class = document.getElementById('rep_12').checked;//special if/else class
+    let sp_rtn_class = document.getElementById('rep_13').checked;//special rtn class
+    let sp_nll_class = document.getElementById('rep_14').checked;//special nll class
+    let sp_try_catch_class = document.getElementById('rep_15').checked;//special try/catch class
+    let sp_class_class = document.getElementById('rep_16').checked;//special class class
+    let sp_il_cmnt_class = document.getElementById('rep_17').checked;//special inline comments class
+    let sp_nw_class = document.getElementById('rep_18').checked;//special new class
+    let sp_kw_class = document.getElementById('rep_18').checked;//special key word class
     
     //get text
     let in_el = document.getElementById("text_input");
@@ -202,6 +212,12 @@
     if(qt_to_escp)
     {
       the_text = the_text.replaceAll("\"", "\\\"");
+    }
+    //C# In-line comment Classes (CSE 325 Notes) 
+    //(since looks for \n, must happen before \n is encased in quotes)
+    if(sp_il_cmnt_class)
+    {
+      the_text = the_text.replaceAll(/(\/\/[^\n]+)(\n)/g, "<span class='comment'>$1</span>$2");
     }
     //prefix num_spaces plus quote (\s + ")
     if(prfx_sp_pls_qt)
@@ -245,17 +261,85 @@
     {
       the_text = the_text.replaceAll(/(\s*)(using)/g, "$1<span class='using'>using</span>");
     }
-    //C# Att Classes (CSE 325 Notes)
+    //C# str Classes (CSE 325 Notes)
     if(sp_str_class)
-    { console.log("poo");
+    { 
       the_text = the_text.replaceAll(/([@|$]*\\"[^\n"]*\\")/g, "<span class='str'>$1</span>");
     }
     
+    //C# most class Classes (CSE 325 Notes)
+    if(sp_class_class)
+    {
+      //pub/prive static known_type
+      the_text = the_text.replaceAll(/(\n)*(\s)?(public|private)(\s)+(class)(\s)+(\S)+(\s)/g, "$1$2<span class='dclr'>$3$4$5</span>$6<span class='dclr-c'>$7</span>$8");
+    }
+    
+    //C# most dclr Classes (CSE 325 Notes)
+    if(sp_dclr_class)
+    {
+      //pub/prive static known_type
+      the_text = the_text.replaceAll(/(\n)*(\s)?(public|private)(\s)+(static)(\s)+(int|double|string|char|long|float|void|bool|byte|decimal)(\s)/g, "$1$2<span class='dclr'>$3$4$5$6$7</span>$8");
+      //pub/prive know_type
+      the_text = the_text.replaceAll(/(\n)*(\s)?(public|private)(\s)+(int|double|string|char|long|float|void|bool|byte|decimal)(\s)+/g, "$1$2<span class='dclr'>$3$4$5</span>$6");
+      //pub/prive
+      the_text = the_text.replaceAll(/(\n)*(\s)?(public|private)(\s)+/g, "$1$2<span class='dclr'>$3</span>$4");
+      //all other know types (eg in params, also var
+      the_text = the_text.replaceAll(/(int|double|string|char|long|float|void|bool|byte|decimal|var)(\?)?(\[)?(\])?(\s)?/g, "<span class='dclr'>$1</span>$2$3$4$5");
+      
+    }
+    //C# async await Classes (CSE 325 Notes)
+    if(sp_async_await_class)
+    {
+      the_text = the_text.replaceAll(/(\s)?(async|await)(\s)+/g, "$1<span class='kw'>$2</span>$3");
+    }
+    //C# most if/else Classes (CSE 325 Notes)
+    if(sp_if_el_class)
+    {
+      the_text = the_text.replaceAll(/(\s)?(if)(\s)?/g, "$1<span class='if'>$2</span>$3");
+      the_text = the_text.replaceAll(/(\s)?(else)(\s)?/g, "$1<span class='else'>$2</span>$3");
+    }
+    //C# most return Classes (CSE 325 Notes)
+    if(sp_rtn_class)
+    {
+      the_text = the_text.replaceAll(/(\s)?(return)(\s|;)?/g, "$1<span class='rtn'>$2</span>$3");
+    }
+    //C# most null Classes (CSE 325 Notes)
+    if(sp_nll_class)
+    {
+      the_text = the_text.replaceAll(/(\s)(null)(\s|\(|\)|[^a-zA-Z])?/g, "$1<span class='nll'>$2</span>$3");
+    }
+    //C# most try/catch Classes (CSE 325 Notes)
+    if(sp_try_catch_class)
+    {
+      the_text = the_text.replaceAll(/(\s)?(try)(\s)?/g, "$1<span class='try'>$2</span>$3");
+      the_text = the_text.replaceAll(/(\s)?(catch)(\s)?/g, "$1<span class='catch'>$2</span>$3");
+    }
+    //C# most new keyword Classes (CSE 325 Notes)
+    if(sp_nw_class)
+    {
+      the_text = the_text.replaceAll(/(\s)(new)(\s)/g, "$1<span class='nw'>$2</span>$3");
+    }
+    //C# most kw Classes (CSE 325 Notes)
+    if(sp_kw_class)
+    {
+      the_text = the_text.replaceAll(/(\s)?(namespace)(\s)?/g, "$1<span class='kw'>$2</span>$3");
+      the_text = the_text.replaceAll(/(\s)?(nameof)(\()(\s)?/g, "$1<span class='kw'>$2</span>$3$4");
+    }
     //replace text in paragraph
     //console.log(the_text);
     in_el.value = the_text;
   }
   //END FUNC REPLACE TEXT
+  
+  //function unchecks/checks all c-sharp classed check-boxes:
+  function toggle_c_sharp_boxes(new_value)
+  {
+    let el_arr = document.querySelectorAll('.c-sharp');
+    for(let i = 0; i < el_arr.length; i++)
+    {
+      el_arr[i].checked = new_value;
+    }
+  }
 </script>
 </head>
 <body>
@@ -265,6 +349,10 @@
   <div class="main_wrapper">
   
     <div id="contents_table" class="contents">
+      <div>
+          <input id="tog_c_sharp" type="checkbox" onclick="toggle_c_sharp_boxes(this.checked)">
+          <label for="tog_c_sharp">Toggle C# boxes</label>
+      </div>
       <ul id="weeks_contents">
         <li>
           <input id="rep_0" type="checkbox" >
@@ -300,20 +388,60 @@
         </li> -->
         <!--Specific css class/span replacements for CS 325 -->
         <li>
-          <input id="rep_06" type="checkbox">
+          <input id="rep_06" type="checkbox" class="c-sharp">
           <label for="rep_06">(C#) "{ get; set; }" with &lt;span&gt; classes</label>
         </li>
         <li>
-          <input id="rep_07" type="checkbox">
+          <input id="rep_07" type="checkbox" class="c-sharp">
           <label for="rep_07">(C#ATT) [-&gt;[&lt;span... &amp; ]-&gt;&lt;/span&gt;]"</label>
         </li>
         <li>
-          <input id="rep_08" type="checkbox">
+          <input id="rep_08" type="checkbox" class="c-sharp">
           <label for="rep_08">(C#) Using spans</label>
         </li>
         <li>
-          <input id="rep_09" type="checkbox">
+          <input id="rep_09" type="checkbox" class="c-sharp">
           <label for="rep_09">(C#) string spans</label>
+        </li>
+        <li>
+          <input id="rep_10" type="checkbox" class="c-sharp">
+          <label for="rep_10">(C#) Most 'dclr' classes</label>
+        </li>
+        <li>
+          <input id="rep_11" type="checkbox" class="c-sharp">
+          <label for="rep_11">(C#) async/await classes</label>
+        </li>
+        <li>
+          <input id="rep_12" type="checkbox" class="c-sharp">
+          <label for="rep_12">(C#) if/else classes</label>
+        </li>
+        <li>
+          <input id="rep_13" type="checkbox" class="c-sharp">
+          <label for="rep_13">(C#) return classes</label>
+        </li>
+        <li>
+          <input id="rep_14" type="checkbox" class="c-sharp">
+          <label for="rep_14">(C#) null classes</label>
+        </li>
+        <li>
+          <input id="rep_15" type="checkbox" class="c-sharp">
+          <label for="rep_15">(C#) try/catch classes</label>
+        </li>
+        <li>
+          <input id="rep_16" type="checkbox" class="c-sharp">
+          <label for="rep_16">(C#) pub/priv class classes</label>
+        </li>
+        <li>
+          <input id="rep_17" type="checkbox" class="c-sharp">
+          <label for="rep_17">(C#) inline comments (//...) classes</label>
+        </li>
+        <li>
+          <input id="rep_18" type="checkbox" class="c-sharp">
+          <label for="rep_18">(C#) new classes</label>
+        </li>
+        <li>
+          <input id="rep_19" type="checkbox" class="c-sharp">
+          <label for="rep_19">(C#) various keyword (kw) classes</label>
         </li>
         <li>
           <input id="rep_" type="checkbox">
