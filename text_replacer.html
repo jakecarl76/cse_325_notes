@@ -213,12 +213,24 @@
     {
       the_text = the_text.replaceAll("\"", "\\\"");
     }
+    
+    
+    //*** Items to do before adding on the \n characters ***//
     //C# In-line comment Classes (CSE 325 Notes) 
     //(since looks for \n, must happen before \n is encased in quotes)
     if(sp_il_cmnt_class)
     {
       the_text = the_text.replaceAll(/(\/\/[^\n]+)(\n)/g, "<span class='comment'>$1</span>$2");
     }
+    //C# most class Classes (CSE 325 Notes)
+    if(sp_class_class)
+    {
+      //pub/prive static known_type
+      the_text = the_text.replaceAll(/(\n)*(\s)?(public|private)(\s)+(class)(\s)+(\S+)(\s)?(:)?(\s)?([^\s{\,]+)/g, "$1$2<span class='dclr'>$3$4$5</span>$6<span class='dclr-c'>$7</span>$8$9$10<span class='dclr-c'>$11</span>");
+    }
+    //***END BEFORE \n is placed on ***//
+    
+    
     //prefix num_spaces plus quote (\s + ")
     if(prfx_sp_pls_qt)
     {
@@ -265,13 +277,6 @@
     if(sp_str_class)
     { 
       the_text = the_text.replaceAll(/([@|$]*\\"[^\n"]*\\")/g, "<span class='str'>$1</span>");
-    }
-    
-    //C# most class Classes (CSE 325 Notes)
-    if(sp_class_class)
-    {
-      //pub/prive static known_type
-      the_text = the_text.replaceAll(/(\n)*(\s)?(public|private)(\s)+(class)(\s)+(\S)+(\s)/g, "$1$2<span class='dclr'>$3$4$5</span>$6<span class='dclr-c'>$7</span>$8");
     }
     
     //C# most dclr Classes (CSE 325 Notes)
