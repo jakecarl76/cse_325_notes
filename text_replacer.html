@@ -186,7 +186,9 @@
     let sp_class_class = document.getElementById('rep_16').checked;//special class class
     let sp_il_cmnt_class = document.getElementById('rep_17').checked;//special inline comments class
     let sp_nw_class = document.getElementById('rep_18').checked;//special new class
-    let sp_kw_class = document.getElementById('rep_18').checked;//special key word class
+    let sp_kw_class = document.getElementById('rep_19').checked;//special key word class
+    let wrap_pre_code = document.getElementById('rep_20').checked;//special key word class
+    let wrap_pre_html = document.getElementById('rep_21').checked;//special key word class
     
     //get text
     let in_el = document.getElementById("text_input");
@@ -226,7 +228,7 @@
     if(sp_class_class)
     {
       //pub/prive static known_type
-      the_text = the_text.replaceAll(/(\n)*(\s)?(public|private)(\s)+(class)(\s)+(\S+)(\s)?(:)?(\s)?([^\s{\,]+)/g, "$1$2<span class='dclr'>$3$4$5</span>$6<span class='dclr-c'>$7</span>$8$9$10<span class='dclr-c'>$11</span>");
+      the_text = the_text.replaceAll(/(\n)*(\s)?(public|private)(\s)+(partial\s)?(class)(\s)+(\S+)(\s)?(:)?(\s)?([^\s{\,]+)/g, "$1$2<span class='dclr'>$3$4$5$6</span>$7<span class='dclr-c'>$8</span>$9$10$11<span class='dclr-c'>$12</span>");
     }
     //***END BEFORE \n is placed on ***//
     
@@ -285,7 +287,7 @@
       //pub/prive static known_type
       the_text = the_text.replaceAll(/(\n)*(\s)?(public|private)(\s)+(static)(\s)+(int|double|string|char|long|float|void|bool|byte|decimal)(\s)/g, "$1$2<span class='dclr'>$3$4$5$6$7</span>$8");
       //pub/prive know_type
-      the_text = the_text.replaceAll(/(\n)*(\s)?(public|private)(\s)+(int|double|string|char|long|float|void|bool|byte|decimal)(\s)+/g, "$1$2<span class='dclr'>$3$4$5</span>$6");
+      the_text = the_text.replaceAll(/(\n)*(\s)?(public|private|protected)(\s)+(override\s)?(int|double|string|char|long|float|void|bool|byte|decimal)(\s)+/g, "$1$2<span class='dclr'>$3$4$5$6</span>$7");
       //pub/prive
       the_text = the_text.replaceAll(/(\n)*(\s)?(public|private)(\s)+/g, "$1$2<span class='dclr'>$3</span>$4");
       //all other know types (eg in params, also var
@@ -300,7 +302,7 @@
     //C# most if/else Classes (CSE 325 Notes)
     if(sp_if_el_class)
     {
-      the_text = the_text.replaceAll(/(\s)?(if)(\s)?/g, "$1<span class='if'>$2</span>$3");
+      the_text = the_text.replaceAll(/(\s+)(if)(\s)?/g, "$1<span class='if'>$2</span>$3");
       the_text = the_text.replaceAll(/(\s)?(else)(\s)?/g, "$1<span class='else'>$2</span>$3");
     }
     //C# most return Classes (CSE 325 Notes)
@@ -316,7 +318,7 @@
     //C# most try/catch Classes (CSE 325 Notes)
     if(sp_try_catch_class)
     {
-      the_text = the_text.replaceAll(/(\s)?(try)(\s)?/g, "$1<span class='try'>$2</span>$3");
+      the_text = the_text.replaceAll(/(\s+)(try)(\s)?/g, "$1<span class='try'>$2</span>$3");
       the_text = the_text.replaceAll(/(\s)?(catch)(\s)?/g, "$1<span class='catch'>$2</span>$3");
     }
     //C# most new keyword Classes (CSE 325 Notes)
@@ -328,8 +330,20 @@
     if(sp_kw_class)
     {
       the_text = the_text.replaceAll(/(\s)?(namespace)(\s)?/g, "$1<span class='kw'>$2</span>$3");
-      the_text = the_text.replaceAll(/(\s)?(nameof)(\()(\s)?/g, "$1<span class='kw'>$2</span>$3$4");
+      the_text = the_text.replaceAll(/(\s)?(nameof|typeof)(\()(\s)?/g, "$1<span class='kw'>$2</span>$3$4");
     }
+    
+    
+    //wrap in pre class/ code /code html classes
+    if(wrap_pre_code && wrap_pre_html)
+    {
+      the_text = "  + \"<pre class='code html'>\"\n" + the_text + "  + \"</pre>\"\n"
+    }
+    else if(wrap_pre_code)
+    {
+      the_text = "  + \"<pre class='code'>\"\n" + the_text + "  + \"</pre>\"\n"
+    }
+    
     //replace text in paragraph
     //console.log(the_text);
     in_el.value = the_text;
@@ -359,6 +373,14 @@
           <label for="tog_c_sharp">Toggle C# boxes</label>
       </div>
       <ul id="weeks_contents">
+        <li>
+          <input id="rep_20" type="checkbox" class="">
+          <label for="rep_20">include/wrap in pre el w/\"code\" class</label>
+        </li>
+        <li>
+          <input id="rep_21" type="checkbox" class="">
+          <label for="rep_21">include \"html\" class in pre el</label>
+        </li>
         <li>
           <input id="rep_0" type="checkbox" >
           <label for="rep_0">&amp; to Entity</label>
