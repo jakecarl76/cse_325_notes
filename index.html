@@ -6,6 +6,8 @@
   <style>
     :root
     {
+      --main-bg: white;
+    
       --key-word: blue;
       --declare: blue;
       --try: blue;
@@ -47,6 +49,16 @@
       --hl-yellow: #F9F970;
       --hl-red: mistyrose;
     }
+    
+    .options-div
+    {
+      text-align: left;
+    }
+    .options-div label
+    {
+      display: block;
+    }
+    
     header
     {
       background-color: cornflowerblue;
@@ -85,13 +97,43 @@
       display: grid;
       grid-template-columns: var(--contents-width) 1fr;
     }
+    
+    .notes-controls
+    {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: calc(95vw - var(--contents-width) - 2em);
+      position: fixed;
+      background-color: var(--main-bg);
+      padding: 0.5em;
+      bottom: 0px;
+    }
+    
+    .sticky-btn
+    {
+      position: sticky;
+      top: 0px;
+      padding: 1em;
+      background: var(--main-bg);
+    }
+    .bot-btn
+    {
+      position: fixed;
+      bottom: 0px;
+      width: var(--contents-width);
+      padding: 0.5em;
+      background: var(--main-bg);
+      font-family: sans-serif;
+    }
     .contents
     {
       font-family: sans-serif;
       max-width: var(--contents-width);
       overflow: auto;
       max-height: 100vh;
-      position: fixed;      
+      position: sticky;
+      top: 0px;      
       padding-left: 0.5em;
     }
     .contents ul
@@ -119,11 +161,18 @@
       font-size: 0.5rem;
     }
     
+    #weeks_contents
+    {
+      padding-bottom: 3em;
+    }
+    
     .notes-display
     {
       padding-left: 2em;
+      padding-bottom: 3em;
       grid-column: 2;
     }
+    
     
     /* File tree system:
          > Ul element gets ft class
@@ -476,6 +525,22 @@
     {
       display: none;
     }
+    .opened > .hidden
+    {
+      display: block;
+    }
+    
+    .link-btn
+    {
+      color: blue;
+      text-decoration: underline;
+    }
+    
+    .ptr
+    {
+      cursor: pointer;
+    }
+    
     
     /*special cellphone demonstration class*/
     
@@ -1077,7 +1142,14 @@
     cur_note++;
   }
   
-  add_note("<h2 id='w01'>Week 01</h2>");
+  add_note("<h2 id='w01'>Week 01</h2>"
+  + "<ul>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "../w01/assignments/W01_Introduction_&_Readings__.NET_Software_Development.html"
+  + "'>Week Introduction</a>"
+  + "</li>"
+  + "</ul>");
   
   //ch1
   add_note("<h3 id='r1'><a href='" + link_csypb 
@@ -2411,7 +2483,14 @@
   //END A1
   
   //w02
-  add_note("<h2 id='w02'>Week 02</h2>");
+  add_note("<h2 id='w02'>Week 02</h2>"
+  + "<ul>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "../w02/assignments/W02_Introduction_&_Readings__.NET_Software_Development.html"
+  + "'>Week Introduction</a>"
+  + "</li>"
+  + "</ul>");
   
   //r5
   add_note("<h3 id='r5'><a href='" + link_csypb_pg 
@@ -30849,8 +30928,15 @@
   //END R35 Reading 28
   
   //W13
-  add_note("<h2 id='w13'>Week 13</h2>");
-  
+  add_note("<h2 id='w13'>Week 13</h2>"
+  + "<ul>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "../w13/assignments/W13_Introduction__.NET_Software_Development.html"
+  + "'>Week Introduction</a>"
+  + "</li>"
+  + "</ul>"
+  );
   //R36
   add_note("<h3 id='r36'>Article: <em>The essential blessing of lifelong learning</em></h3>"
   + "<ul>"
@@ -30864,33 +30950,18 @@
   //END R36 (reading29)
   
   //A9
-  add_note("<h3 id='a9'>Assignment: <em>Title_Here</em></h3>"
+  add_note("<h3 id='a9'>Team Project: <em>Sacrament Meeting Planner</em></h3>"
+  
+  + "<h4 id='a9-1'><em>Instructions</em></h4>"
   + "<ul>"
   + "<li>"
   + "REF: <a target='_blank' href='"
-  + "URL_Text_Here"
-  + "'>URL_Summery_Here</a>"
-  + "</li>"
-  + "</ul>"
-  
-  + "<h4 id='a9-1'><em>Instructions</em></h4>"
-  + "<p>"
-  + ""
-  + ""
-  + ""
-  + "</p>"
-  + "<ul>"
-  + "<li>"
-  + ""
+  + "../w13/assignments/W13-14_Team_Project__Sacrament_Meeting_Planner.html"
+  + "'>Project Instructions</a>"
   + "</li>"
   + "</ul>"
   
   + "<h4 id='a9-2'><em>Files</em></h4>"
-  + "<p>"
-  + ""
-  + ""
-  + ""
-  + "</p>"
   + "<ul>"
   + "<li>"
   + "REF: <a target='_blank' href='"
@@ -30905,14 +30976,57 @@
   + "</ul>"
   
   + "<h4 id='a9-3'><em>Notes</em></h4>"
-  + "<p>"
-  + ""
-  + ""
-  + ""
-  + "</p>"
   + "<ul>"
   + "<li>"
-  + ""
+  + "Navigation Properties, ie. when your model object holds a collection of another model "
+  + "object, this association seems to be created entirely by the FK of the 'child' model/object"
+  + "</li>"
+  + "<li>"
+  + "Ie. in this situation the held 'child' object must have a FK property that points to its "
+  + "'parent' holder, and the 'parent' model must have a collection of the 'child' model (eg. an "
+  + "<strong class='code'><span class='dclr-c'>ICollection</span>&lt;<span class='generic'>T</span>&gt;</strong>"
+  + "/etc.), then EF seems to handle the rest"
+  + "</li>"
+  + "<li>"
+  + "The association in the Tables that EF creates is held entirely in the child model's tables "
+  + "via the FK column, the parent model's table has no reference to the child object"
+  + "</li>"
+  + "<li>"
+  + "The other thing you must make sure of is that the <strong class='code dclr-c'>"
+  + "Context</strong> class in <strong class='code'>Data/Context.cs</strong> "
+  + "has a <strong class='code dclr-c'>DbSet</strong> object made for the child model, eg.:"
+  + "<pre class='code'>...\n\n"
+  + "<span class='kw'>namespace</span> YourProjectName.Data\n"
+  + "{\n"
+  + "    <span class='dclr'><span class='dclr'>public</span> class</span> <span class='dclr-c'>SacramentMeetingPlannerMVCContext</span> : <span class='dclr-c'>DbContext</span>\n"
+  + "    {\n"
+  + "        <span class='dclr'>public</span> <span class='dclr-c'>SacramentMeetingPlannerMVCContext</span> (<span class='dclr-c'>DbContextOptions</span>&lt;<span class='dclr-c'>SacramentMeetingPlannerMVCContext</span>&gt; options)\n"
+  + "            : <span class='kw'>base</span>(options)\n"
+  + "        {\n"
+  + "        }\n"
+  + "\n"
+  + "        <span class='dclr'>public</span> <span class='dclr-c'>DbSet</span>&lt;YourProjectName.Models.<span class='dclr-c'>ParentModelClass</span>&gt; <span class='dclr-c'>ParentModelClass</span> { <span class='gttr'>get</span>; <span class='sttr'>set</span>; } = <span class='kw'>default</span>!;\n"
+  + "        <span class='hl-rd'><span class='dclr'>public</span> <span class='dclr-c'>DbSet</span>&lt;YourProjectName.Models.<span class='dclr-c'>ChildModelClass</span>&gt; <span class='dclr-c'>ChildModelClass</span> { <span class='gttr'>get</span>; <span class='sttr'>set</span>; } = <span class='kw'>default</span>!;</span>\n"
+  + "    }\n"
+  + "}\n"
+  + "</pre>"
+  + "</li>"
+  + "<li>"
+  + "When creating this project I had attempted to just track the speakers and their topics via two "
+  + "<strong class='code'><span class='dclr-c'>List</span>&lt;<span class='dclr'>string</span>&gt;</strong> "
+  + "collections, but EF simply ignored them and created a single table for the parent "
+  + "<strong class='code dclr-c'>SmProgram</strong> class model "
+  + "and did not create a column or other table to track the speakers/topics lists"
+  + "</li>"
+  + "<li>"
+  + "Thus later I created a <strong class='code dclr-c'>Talk</strong> model which tracked the "
+  + "speaker and topics and then manually added the 'child' <strong class='code dclr-c'>DbSet</strong> "
+  + "object to the <strong class='code dclr-c'>Context</strong> class"
+  + "</li>"
+  + "<li>"
+  + "It may well be that EF would have automatically created the tables and context this way "
+  + "automatically if I had just created the talk model in the beginning, but as I didn't, I "
+  + "can't be sure it normally behaves that way"
   + "</li>"
   + "</ul>"
   
@@ -30954,7 +31068,24 @@
   );
   //END A9
   
-  //PREV/CURR: R36 (Reading 29)  //V1 //A8
+  //w14
+  add_note("<h2 id='w14'>Week 14</h2>"
+  + "<ul>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "../w14/W14_Introduction__.NET_Software_Development.html"
+  + "'>Week Introduction</a>"
+  + "</li>"
+  + "<li>"
+  + "REF: <a target='_blank' href='"
+  + "URL_Text_Here"
+  + "'>Final Grades</a>" //DVDVDVDVDVDVDVDVDV
+  + "</li>"
+  + "</ul>");
+  
+  //PREV/CURR: R36 (Reading 29)  //V1 //A9
+  
+  /*Templates used for notes:
   
   //week note template *********DO NOT EDIT**********************
   add_note("<h2 id='w0X'>Week 0X</h2>");
@@ -31026,7 +31157,7 @@
   + "</li>"
   + "</ul>"
   );
-  
+  //END TEMPLATE USED FOR NOTES*/
 </script>
 </head>
 <body>
@@ -31036,8 +31167,98 @@
   <div class="main_wrapper">
   
     <div id="contents_table" class="contents">
-      <!--Will need to js program to insert into each li item with a ul child: the ul child have hidden
-        and a show/hide button in the li item dvdvdvdvdvdvdvdvdvdvdv-->
+      <div class='sticky-btn centered'>
+      <div>
+        <div>
+          <span id="options_btn">Options</span>
+        </div>
+        <div class='options-div'>
+          <h1>Options</h1>
+          <h2>Notes Display Mode</h2>
+         
+          <label for='ndm_all'><input type='radio' id='ndm_all' name='radio-ndm' checked /> Show All Notes</label>
+          
+          <label for='ndm_week'><input type='radio' id='ndm_week' name='radio-ndm'/> Show Full Weeks</label>
+          
+          <label for='ndm_note'><input type='radio' id='ndm_note' name='radio-ndm'/> Show Single Note</label>
+          <h2>Night Mode</h2>
+        </div>
+        <script>
+          let notes_mode = "all";
+          let curr_index = 1; //start with first note
+          
+          //dvdvdvdvdvdvdvd options div hidden functionality
+          
+          //function updates mode based on radio buttons
+          function changeMode()
+          {
+            if(document.getElementById("ndm_all").checked)
+            {
+              notes_mode = "all";
+              //hide next/prev page buttons ddvdvdvdvdvdv
+            }
+            else if(document.getElementById("ndm_week").checked)
+            {
+              notes_mode = "week";
+              //show next/prev page buttons dvdvdvdvd
+            }
+            else if(document.getElementById("ndm_note").checked)
+            {
+              notes_mode = "single";
+              //show next/prev page buttons dvdvdvdvdvdvdv
+            }
+            
+            display_notes();
+          }
+          
+          //add to radio buttons
+          document.getElementById("ndm_all").addEventListener("input", changeMode);
+          document.getElementById("ndm_week").addEventListener("input", changeMode);
+          document.getElementById("ndm_note").addEventListener("input", changeMode);
+          
+          //show all, by week, by week/note
+          
+            //add func to all table of contents a: -> should return if mode is "all", should display_notes() if mode is "single" or "week"
+            //if is in not show everything mode then:
+            //load note:
+              //clears display
+              //searches notes until finds the href index requested (ie gets from a tag)
+              //from index searches back to find next week 'note'
+              //if in week display mode, searches to next week note and dispalys all inbetween (include 1st week note, exclude 2nd)
+              //if in note mode, only shows fouond week note and requested note
+              //runs highlihgtes api funcs
+              
+              //create funcs for next/prev buttons: check limts, increas or decreas curr_index
+            </script>
+        </div>
+        <div>
+          <span id="expander" class='link-btn ptr'>Expand All</span>
+          <script>
+            document.getElementById("expander").addEventListener("click", 
+              function()
+              {
+                let tmp_els = document.querySelectorAll('#weeks_contents > li ul');
+                if(this.innerHTML == "Expand All")
+                {
+                  this.innerHTML = "Close All";
+                  tmp_els.forEach(el => el.parentElement.classList.add("opened"));
+                  //change all arrows
+                  let tmp_arr_els = document.querySelectorAll("#weeks_contents .expander_class");
+                  tmp_arr_els.forEach(el => el.innerHTML = " &uarr;")
+                }
+                else
+                {
+                  this.innerHTML = "Expand All";
+                  tmp_els.forEach(el => el.parentElement.classList.remove("opened"));
+                  //change all arrows
+                  let tmp_arr_els = document.querySelectorAll("#weeks_contents .expander_class");
+                  tmp_arr_els.forEach(el => el.innerHTML = " &darr;")
+                }
+              });
+          </script>
+        </div>
+      </div>
+        
       <ul id="weeks_contents">
       
         <li>
@@ -31295,6 +31516,9 @@
                 <li>
                   <h3><a href="#r4">Personal Research: YouTube Video: <em>Visual Studio Code vs Visual Studio</em></a></h3>
                   <ul>
+                    <li>
+                      <h3><a href="#r4-a"><em>VS Code vs VS Community</em></a></h3>
+                    </li>
                   </ul>
                   <!--end chapter/article list-->
                 </li>
@@ -33781,10 +34005,10 @@
             
             <!--READING a9-->
             <li>
-              <h2>Assignment 09: </h2>
+              <h2>Assignment 09: Final Project</h2>
               <ul>
                 <li>
-                  <h3><a href="#a9">Chz <em>Chapter_title_here</em></a></h3>
+                  <h3><a href="#a9">Team Project: <em>Sacrament Meeting Planner</em></a></h3>
                   <ul>
                     <li>
                       <h3><a href="#a9-1"><em>Instructions</em></a></h3>
@@ -33812,6 +34036,14 @@
         </li>
         <!--END WEEK 13-->
         
+        <!--Week Template-->
+        <li>
+          <h1><a href="#w14">Week 14</a></h1>
+        </li>
+        <!--END WEEK 14-->
+        
+        <script>
+        /* Template used for table of contents
         
         <!--rules for new rx++, a++, or new list items in each ul:
           >>new h2 reading title and rx++/ax++ for each:
@@ -33866,21 +34098,56 @@
           </ul>
         </li>
         <!--END WEEK 0x-->
-        
+        */
+        </script>
       </ul>
     </div>
     <!-- END TABLE OF CONTENTS-->
     
+    <div class='bot-btn centered'>
+      <a href='#'>Top</a>
+    </div>
+    
     <div id="main_display" class="notes-display">
       <script>
+        //overloaded handles no given href value
         function display_notes()
         {
+          display_notes("NO-HREF-VALUE");
+        }
+        
+        function display_notes(href_value)
+        {
+          console.log("updating display: ");
           let dis_el = document.getElementById("main_display");
-          for(let i = 0; i < notes.length; i++)
+          
+          //clear display:
+          dis_el.innerHTML = "";
+          
+          //display all notes
+          if(notes_mode == "all")
           {
-            let tmp_el = document.createElement("div");
-            tmp_el.innerHTML = notes[i];
-            dis_el.append(tmp_el);
+            for(let i = 0; i < notes.length; i++)
+            {
+              let tmp_el = document.createElement("div");
+              tmp_el.innerHTML = notes[i];
+              dis_el.append(tmp_el);
+            }
+          }
+          else
+          {
+            //do common stuff dvdvdvdvdvdvdvdv
+            
+            //get query data (ie. get the #end if there is one)
+            //if found will use to find note to display
+            // if none/not found, will just display first note
+            //maybe use a special #index=NUM for getting a separate page?
+            //add next/prev page buttons when in single/week mode?
+              //buttons would swithc betweewn weeks in week mode, notes in note mode
+            
+            //if notes mode == week
+            
+            //if notes mode == single
           }
         }
         //END FUNC DISPLAY Notes
@@ -33898,7 +34165,42 @@
         //highlight Razor Markup texts (el's with .html class)
         let rzpg_els = document.querySelectorAll('.razor-markup');
         rzpg_els.forEach(el => setRZPGHighlights(el));
+        
+        
+        //dynamically add hiding to table of contents
+        //target the #weeks_contents->first child's first child -> ul
+        let week_ul_els = document.querySelectorAll('#weeks_contents > li ul');
+        //let week_ul_els = document.querySelectorAll('#weeks_contents:first-child li ul');
+        //week_ul_els.forEach(el => el.style.border = '5px solid red');
+        week_ul_els.forEach(el => {
+          el.classList.add("hidden");
+          let tmp_el = document.createElement("span");
+          tmp_el.classList.add("ptr", "expander_class");
+          
+          tmp_el.innerHTML = " &darr;";
+          tmp_el.addEventListener("click", function(){
+            if(this.parentElement.parentElement.classList.contains("opened"))
+            {
+              this.innerHTML = " &darr;";
+              this.parentElement.parentElement.classList.remove("opened");
+            }
+            else
+            {
+              this.innerHTML = " &uarr;";
+              this.parentElement.parentElement.classList.add("opened");
+            }
+          });
+          //END SPAN EVENT LISTENER
+          el.parentNode.append(tmp_el);
+          let el2 = el.parentNode.children[0].append(tmp_el);
+        });
+        //END FOR EACH UL EL
+        
       </script>
+      <div class='notes-controls'>
+        <input type='button' value='prev'>
+        <input type='button' value='next'><!--//dvdvdvdv change to custom div-bnts/etc-->
+      </div>
     </div>
     <!--END MAIN DISPLAY-->
     
