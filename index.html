@@ -7,6 +7,15 @@
     :root
     {
       --main-bg: white;
+      --main-color: black;
+      --header-bg: cornflowerblue;
+      --main-border-thickness: 2px;
+      --main-link: blue;
+      
+      --btn-border-color: var(--header-bg);
+      --btn-bg-color: var(--main-bg);
+      --btn-color: var(--header-bg);
+      --btn-border-thickness: 4px;
     
       --key-word: blue;
       --declare: blue;
@@ -46,8 +55,21 @@
       --razor-keyword: blue;
       --razor-class: teal;
       
+      --table-alternate-row-color: lightgrey;
+      
       --hl-yellow: #F9F970;
       --hl-red: mistyrose;
+    }
+    
+    a
+    {
+      color: var(--main-link);
+    }
+    
+    body
+    {
+      background-color: var(--main-bg);
+      color: var(--main-color);
     }
     
     .options-div
@@ -61,7 +83,7 @@
     
     header
     {
-      background-color: cornflowerblue;
+      background-color: var(--header-bg);
       color: white;
       padding: 1em;
     }
@@ -86,7 +108,7 @@
     }
     tr:nth-child(even)
     {
-      background-color:lightgrey;
+      background-color: var(--table-alternate-row-color);
     }
     td
     {
@@ -106,25 +128,41 @@
       width: calc(95vw - var(--contents-width) - 2em);
       position: fixed;
       background-color: var(--main-bg);
+      border-top: solid var(--main-border-thickness) var(--header-bg);
       padding: 0.5em;
       bottom: 0px;
+      
+    }
+    .notes-controls_btn
+    {
+      padding: 0.5em;
+      font-size: 1.25em;
+      min-width: 10em;
+      max-width: 10em;
+      background-color: var(--btn-bg-color);
+      color: var(--btn-color);
+      border: solid var(--btn-border-thickness) var(--btn-border-color);
+      border-radius: 0.75em;
     }
     
     .sticky-btn
     {
       position: sticky;
       top: 0px;
+      margin-left: -1em;
       padding: 1em;
       background: var(--main-bg);
+      border-bottom: solid var(--main-border-thickness) var(--header-bg);
     }
     .bot-btn
     {
       position: fixed;
       bottom: 0px;
-      width: var(--contents-width);
+      width: calc(var(--contents-width) - 2em);
       padding: 0.5em;
       background: var(--main-bg);
       font-family: sans-serif;
+      border-top: solid var(--main-border-thickness) var(--header-bg);
     }
     .contents
     {
@@ -169,7 +207,7 @@
     .notes-display
     {
       padding-left: 2em;
-      padding-bottom: 3em;
+      padding-bottom: 5em;
       grid-column: 2;
     }
     
@@ -532,8 +570,14 @@
     
     .link-btn
     {
-      color: blue;
+      color: var(--main-link);
       text-decoration: underline;
+    }
+    
+    .space-around-el
+    {
+      margin: 1em;
+      display: inline-block;
     }
     
     .ptr
@@ -607,7 +651,8 @@
     
     /*END special cellphone demonstration class*/
   </style>
-  
+  <style id="style_overrider">
+  </style>
 <script>
   let notes = [];
   let cur_note = 0;
@@ -1017,12 +1062,12 @@
         //add range to elements highlight
         rzpg_comment_hl.add(range);
     });
-    //DVDVDVDVDVDVDVDVDV these comment matches for @*...*@ are imperfect and will fail if there are
+    // these comment matches for @*...*@ are imperfect and will fail if there are
     //both * or @ in the commented sections should try to find a better way that searches for 
     //and captures anything that is not *@ but stops when it hits *@ (because [] doesn't care
     //about order and we need to match a pattern, not just a single symbol like > for html
     
-    //match all "//" C# like 'comments' in a @{}    //dvdvdvdv right now only matches the first comment
+    //match all "//" C# like 'comments' in a @{}    //only matches the first comment
     text_body.textContent.matchAll(/@\{[^\}\/]*(\/\/[^\n]*)/g, "d").forEach( 
       (item)=> {
         //create range of the text of element from match
@@ -8288,13 +8333,20 @@
   + "</li>"
   + "</ul>"
   + "<p>"
+  + "While <span class='ptr' onclick=\"this.parentElement.parentElement.classList.toggle('opened');\"'>"
+  + "my opinion</span> on course material and its maintenance is not important to this subject, "
+  + "it should be noted that the assigned reading is a bit antiquated and there are better "
+  + "sources/ways of doing JSON Serialization. While we will cover the assigned reading, "
+  + "a more contemporary method will also be covered later."
+  + "</p>"
+  + "<p class='hidden'>"
   + "In all honesty, this reading assignment leaves something to be desired. It "
   + "perplexes me why they would label the assignment as "
   + "<em>\"JSON Serialization\"</em> and then only link to the "
   + "<strong>DataContractJsonSerializer sample</strong> page."
   + "</p>"
-  + "<p>"
-  + "The while fine as a reference document, the linked article is "
+  + "<p class='hidden'>"
+  + "While fine as a reference document, the linked article is "
   + "not a \"how to\" on <em>JSON serialization</em> but only goes over the <strong class='code dclr-c'>"
   + "DataContractJsonSerializer</strong> class, giving a rather poorly illustrated "
   + "example. It expects you to be familiar with the <strong class='code dclr-c'>"
@@ -8306,7 +8358,7 @@
   + "in complexity compared to the relatively beginners friendly material that "
   + "the text book and course have covered thus far."
   + "</p>"
-  + "<p>"
+  + "<p class='hidden'>"
   + "I can appreciate and understand the importance of teaching students to be "
   + "self sufficient and to learn how to research and learn things on their own. "
   + "However, such a misleading name for the assignment and such a step up in "
@@ -8315,7 +8367,7 @@
   + "either they lost their notes on who they thought their audience was, or (more "
   + "likely) someone goofed on what the assignment linked to."
   + "</p>"
-  + "<p>"
+  + "<p class='hidden'>"
   + "Anyways, after turning a short explanation into a long rant, there is a much easier way "
   + "to do Json Serialization and Deserialization using the <a href='#r15-5'"
   + "<strong class='code'>System.Text.Json.JsonSerializer.Serialize()</strong> "
@@ -8400,7 +8452,7 @@
   + "</li>"
   + "<li>"
   + "Attributes can provide the metadata when the program is running via "
-  + "<em>reflection</em> (see Reflection)" //dvdvdvdvdv
+  + "<em>reflection</em> (see <a href='#r15-3'>Reflection</a>)"
   + "</li>"
   + "<li>"
   + "Attributes are applied to a code entity (eg. a class, class member/property, etc.) "
@@ -31170,9 +31222,11 @@
       <div class='sticky-btn centered'>
       <div>
         <div>
-          <span id="options_btn">Options</span>
+          <span id="options_btn" class='ptr link-btn space-around-el'
+           onclick="this.parentElement.parentElement.classList.toggle('opened')"
+          >Options</span>
         </div>
-        <div class='options-div'>
+        <div class='options-div hidden'>
           <h1>Options</h1>
           <h2>Notes Display Mode</h2>
          
@@ -31182,12 +31236,11 @@
           
           <label for='ndm_note'><input type='radio' id='ndm_note' name='radio-ndm'/> Show Single Note</label>
           <h2>Night Mode</h2>
+          <label for='night_mode'><input type='checkbox' id='night_mode' onclick="toggle_night_mode(this.checked);"/> Night Mode</label>
         </div>
         <script>
           let notes_mode = "all";
           let curr_index = 1; //start with first note
-          
-          //dvdvdvdvdvdvdvd options div hidden functionality
           
           //function updates mode based on radio buttons
           function changeMode()
@@ -31195,17 +31248,14 @@
             if(document.getElementById("ndm_all").checked)
             {
               notes_mode = "all";
-              //hide next/prev page buttons ddvdvdvdvdvdv
             }
             else if(document.getElementById("ndm_week").checked)
             {
               notes_mode = "week";
-              //show next/prev page buttons dvdvdvdvd
             }
             else if(document.getElementById("ndm_note").checked)
             {
               notes_mode = "single";
-              //show next/prev page buttons dvdvdvdvdvdvdv
             }
             
             display_notes();
@@ -31216,19 +31266,6 @@
           document.getElementById("ndm_week").addEventListener("input", changeMode);
           document.getElementById("ndm_note").addEventListener("input", changeMode);
           
-          //show all, by week, by week/note
-          
-            //add func to all table of contents a: -> should return if mode is "all", should display_notes() if mode is "single" or "week"
-            //if is in not show everything mode then:
-            //load note:
-              //clears display
-              //searches notes until finds the href index requested (ie gets from a tag)
-              //from index searches back to find next week 'note'
-              //if in week display mode, searches to next week note and dispalys all inbetween (include 1st week note, exclude 2nd)
-              //if in note mode, only shows fouond week note and requested note
-              //runs highlihgtes api funcs
-              
-              //create funcs for next/prev buttons: check limts, increas or decreas curr_index
             </script>
         </div>
         <div>
@@ -34109,100 +34146,358 @@
     </div>
     
     <div id="main_display" class="notes-display">
-      <script>
-        //overloaded handles no given href value
-        function display_notes()
-        {
-          display_notes("NO-HREF-VALUE");
-        }
-        
-        function display_notes(href_value)
-        {
-          console.log("updating display: ");
-          let dis_el = document.getElementById("main_display");
-          
-          //clear display:
-          dis_el.innerHTML = "";
-          
-          //display all notes
-          if(notes_mode == "all")
-          {
-            for(let i = 0; i < notes.length; i++)
-            {
-              let tmp_el = document.createElement("div");
-              tmp_el.innerHTML = notes[i];
-              dis_el.append(tmp_el);
-            }
-          }
-          else
-          {
-            //do common stuff dvdvdvdvdvdvdvdv
-            
-            //get query data (ie. get the #end if there is one)
-            //if found will use to find note to display
-            // if none/not found, will just display first note
-            //maybe use a special #index=NUM for getting a separate page?
-            //add next/prev page buttons when in single/week mode?
-              //buttons would swithc betweewn weeks in week mode, notes in note mode
-            
-            //if notes mode == week
-            
-            //if notes mode == single
-          }
-        }
-        //END FUNC DISPLAY Notes
-        
-        display_notes();
-        
-        //highlight xaml texts (el's with .xaml class)
-        let xaml_els = document.querySelectorAll('.xaml');
-        xaml_els.forEach(el => setXAMLHighlights(el));
-        
-        //highlight html texts (el's with .html class)
-        let html_els = document.querySelectorAll('.html');
-        html_els.forEach(el => setHTMLHighlights(el));
-        
-        //highlight Razor Markup texts (el's with .html class)
-        let rzpg_els = document.querySelectorAll('.razor-markup');
-        rzpg_els.forEach(el => setRZPGHighlights(el));
-        
-        
-        //dynamically add hiding to table of contents
-        //target the #weeks_contents->first child's first child -> ul
-        let week_ul_els = document.querySelectorAll('#weeks_contents > li ul');
-        //let week_ul_els = document.querySelectorAll('#weeks_contents:first-child li ul');
-        //week_ul_els.forEach(el => el.style.border = '5px solid red');
-        week_ul_els.forEach(el => {
-          el.classList.add("hidden");
-          let tmp_el = document.createElement("span");
-          tmp_el.classList.add("ptr", "expander_class");
-          
-          tmp_el.innerHTML = " &darr;";
-          tmp_el.addEventListener("click", function(){
-            if(this.parentElement.parentElement.classList.contains("opened"))
-            {
-              this.innerHTML = " &darr;";
-              this.parentElement.parentElement.classList.remove("opened");
-            }
-            else
-            {
-              this.innerHTML = " &uarr;";
-              this.parentElement.parentElement.classList.add("opened");
-            }
-          });
-          //END SPAN EVENT LISTENER
-          el.parentNode.append(tmp_el);
-          let el2 = el.parentNode.children[0].append(tmp_el);
-        });
-        //END FOR EACH UL EL
-        
-      </script>
       <div class='notes-controls'>
-        <input type='button' value='prev'>
-        <input type='button' value='next'><!--//dvdvdvdv change to custom div-bnts/etc-->
+        <!--btns for next/prev week/note go in this div-->
       </div>
     </div>
     <!--END MAIN DISPLAY-->
+    <script>
+      //dvdvdvdvdvvd create search func? that searches via finde_note_index_of func?
+        //keeps a last-search index, finds search str note and highlihgts all occurances
+        //in the note/displays to user, when user hits NEXT will just increas start index
+        //to find next note inwhich search index occurs
+        
+      //function adds in the buttons at the bottom when displaying by single note/week
+      function display_page_btns(prev_index, next_index)
+      {
+        //display div
+        let dis_el = document.getElementById("main_display");
+        
+        //create outer shell
+        let shell = document.createElement("div");
+        shell.classList.add("notes-controls");
+        
+        //create prev btn
+        let prev_btn = document.createElement("input");
+        prev_btn.type = "button"
+        prev_btn.value = "Previous";
+        prev_btn.classList.add("notes-controls_btn");
+        shell.append(prev_btn);
+        
+        //create next btn
+        let next_btn = document.createElement("input");
+        next_btn.type = "button"
+        next_btn.value = "Next";
+        next_btn.classList.add("notes-controls_btn");
+        shell.append(next_btn);
+        
+        //add to display
+        dis_el.append(shell);
+        
+        //add action listeners
+        prev_btn.addEventListener("click", function(){
+          window.location.href = window.location.protocol + window.location.hostname + window.location.pathname + "#index" + prev_index;
+          display_notes();
+        });
+        next_btn.addEventListener("click", function(){
+          window.location.href = window.location.protocol + window.location.hostname + window.location.pathname + "#index" + next_index;
+          display_notes();
+        });
+      }
+        
+      //function searches for given string in notes arr, returns first index where found
+      function find_note_index_of(search_str, start = 0)
+      {
+        for(let i = start, len = notes.length; i < len; i++)
+        {
+          if(notes[i].match(search_str) != null)
+          {
+            return i;
+          }
+        }
+        //failed to find index
+        return -1;
+      }
+      
+      //Function handles doing everything required to display notes depending
+      //on current note display mode (all, week, single)
+      function display_notes()
+      {
+        let dis_el = document.getElementById("main_display");
+        
+        //clear display:
+        dis_el.innerHTML = "";
+        
+        //display all notes
+        if(notes_mode == "all")
+        {
+          for(let i = 0; i < notes.length; i++)
+          {
+            let tmp_el = document.createElement("div");
+            tmp_el.innerHTML = notes[i];
+            dis_el.append(tmp_el);
+          }
+        }
+        else
+        {
+          //do common stuff
+          let isGivenIndex = true;
+          let week_index = -1;
+          let note_index = -1;
+          let next_week_index = -1;
+          let next_index = -1;
+          let prev_index = -1;
+          //get the url:
+          let tmp_url = window.location.href;
+          //the the #index info
+          let givenIndex = tmp_url.match(/#(.+)/)
+          
+          //if no index/#location given
+          if(givenIndex == null)
+          {
+            isGivenIndex = false;
+          }
+          else
+          {
+          
+            //if is an #index, just set the current index to the digit
+            if(tmp_url.match(/#index/) != null)
+            { 
+              note_index = Number(tmp_url.match(/#index(\d+)/)[1]);
+              //set the new current note
+              curr_index = note_index;
+            }
+            else
+            {
+              //else if is a #ID need to search/find note with that #ID
+              //find the index (index 0 of result is full match, index 1 capture group match)
+              note_index = find_note_index_of(givenIndex[1]);
+            }
+            
+            //check if is a week index
+            if(notes[note_index].match(/<h2 id='w\d\d'>Week\s\d\d<\/h2>/) != null)
+            {
+              //set the week index to current index
+              week_index = note_index
+            }
+            else
+            {
+              //if curr_index is not a week index, search for the next-prev week index
+              for(let i = note_index - 1, found = false; i >= 0 && !found; i--)
+              {
+                //check index matches week index
+                if(notes[i].match(/<h2 id='w\d\d'>Week\s\d\d<\/h2>/) != null)
+                {
+                  //set week index, set found true to break
+                  week_index = i;
+                  found = true;
+                }
+              }
+              //END SEARCH FOR PREV WEEK INDEX
+            }
+            //END FOR ELSE IF CURR INDEX NOT A WEEK INDEX
+          }
+          //END ELSE IF THERE IS A givenIndex
+          
+          //if notes mode == week
+          if(notes_mode == "week")
+          {
+            //get the index that the next week starts
+            next_week_index = find_note_index_of(/<h2 id='w\d\d'>Week\s\d\d<\/h2>/, note_index + 1);
+            
+            //if -1 then just use final note as end
+            if (next_week_index == -1)
+            {
+              next_week_index = notes.length;
+            }
+            //display first note
+            let tmp_el = document.createElement("div");
+            tmp_el.innerHTML = notes[week_index];
+            dis_el.append(tmp_el);
+            
+            //display rest of notes
+            for(let i = week_index + 1; i < next_week_index; i++)
+            {
+              tmp_el = document.createElement("div");
+              tmp_el.innerHTML = notes[i];
+              dis_el.append(tmp_el);
+            }
+            console.log("WEEK:" + week_index);
+            console.log("Next WEEK: " + next_week_index);
+            //make next at end, or prev at beginning cycle to other side of notes list:
+            //if next is at end, set index to zero
+            if(next_week_index == notes.length)
+            {
+              next_index = 0;
+            }
+            else
+            {
+              next_index = next_week_index;
+            }
+            //if already at zero, set prev to end of list
+            if(week_index == 0)
+            {
+              prev_index = notes.length - 1;
+            }
+            else
+            {
+              prev_index = week_index - 1;
+            }
+            
+            //set next/prev buttons
+            display_page_btns(prev_index, next_index);
+          }
+          else if (notes_mode == "single")
+          {
+            //if notes mode == single
+            //display the week note/title
+            tmp_el = document.createElement("div");
+            tmp_el.innerHTML = notes[week_index];
+            dis_el.append(tmp_el);
+            
+            //only show the selected note if different from the week note/title
+            if(week_index != note_index)
+            {
+              tmp_el = document.createElement("div");
+              tmp_el.innerHTML = notes[note_index];
+              dis_el.append(tmp_el);
+            }
+            //set next/prev buttons
+            
+            //make next at end, or prev at beginning cycle to other side of notes list:
+            //if next is at end, set index to zero
+            if(note_index >= notes.length - 1)
+            {
+              next_index = 0;
+            }
+            else
+            {
+              next_index = note_index + 1;
+            }
+            //if already at zero, set prev to end of list
+            if(note_index == 0)
+            {
+              prev_index = notes.length - 1;
+            }
+            else
+            {
+              prev_index = note_index - 1;
+            }
+            
+            //set next/prev buttons
+            display_page_btns(prev_index, next_index);
+          }
+          //END ELSE IF IS SINGLE NOTE MODE
+        
+        }
+        //END IF NOTES MODE NOT = ALL
+        
+      }
+      //END FUNC DISPLAY Notes
+      
+      display_notes();
+      
+      //highlight xaml texts (el's with .xaml class)
+      let xaml_els = document.querySelectorAll('.xaml');
+      xaml_els.forEach(el => setXAMLHighlights(el));
+      
+      //highlight html texts (el's with .html class)
+      let html_els = document.querySelectorAll('.html');
+      html_els.forEach(el => setHTMLHighlights(el));
+      
+      //highlight Razor Markup texts (el's with .html class)
+      let rzpg_els = document.querySelectorAll('.razor-markup');
+      rzpg_els.forEach(el => setRZPGHighlights(el));
+      
+      
+      //dynamically add hiding to table of contents
+      //target the #weeks_contents->first child's first child -> ul
+      let week_ul_els = document.querySelectorAll('#weeks_contents > li ul');
+      //let week_ul_els = document.querySelectorAll('#weeks_contents:first-child li ul');
+      //week_ul_els.forEach(el => el.style.border = '5px solid red');
+      week_ul_els.forEach(el => {
+        el.classList.add("hidden");
+        let tmp_el = document.createElement("span");
+        tmp_el.classList.add("ptr", "expander_class");
+        
+        tmp_el.innerHTML = " &darr;";
+        tmp_el.addEventListener("click", function(){
+          if(this.parentElement.parentElement.classList.contains("opened"))
+          {
+            this.innerHTML = " &darr;";
+            this.parentElement.parentElement.classList.remove("opened");
+          }
+          else
+          {
+            this.innerHTML = " &uarr;";
+            this.parentElement.parentElement.classList.add("opened");
+          }
+        });
+        //END SPAN EVENT LISTENER
+        el.parentNode.append(tmp_el);
+        let el2 = el.parentNode.children[0].append(tmp_el);
+      });
+      //END FOR EACH UL EL
+      
+      //function for each table content item to call to change note if not in 'all'mode
+      function link_note_display(e)
+      {
+        let el = e.target;
+        if(el.nodeName == "EM")
+        {
+          el = e.target.parentElement;
+        }
+        
+        window.location.href = el.href;
+        //not needed if in all mode, return
+        if(notes_mode == "all")
+        {
+          return;
+        }
+        //else run display notes
+        display_notes();
+      }
+      
+      //function toggles night-mode
+      function toggle_night_mode(mode_value)
+      {
+        let style_el = document.getElementById("style_overrider");
+        if(mode_value)
+        {
+          
+          style_el.innerHTML = ":root\n"
+            + "{\n"
+            + "--main-bg: black;\n"
+            + "--main-color: white;\n"
+            + "--table-alternate-row-color: darkslategrey;\n"
+            + "--main-link: magenta;\n"
+            + "--header-bg: indigo;\n"
+            + ""
+            + "--key-word: cornflowerblue;\n"
+            + "--declare: cornflowerblue;\n"
+            + "--try: cornflowerblue;\n"
+            + "--true_false_literal: cornflowerblue;\n"
+            + "--getter-setter: cornflowerblue;\n"
+            + "--null: cornflowerblue;\n"
+            + "--xaml-markup-text: cornflowerblue;\n"
+            + "--html-markup-el: cornflowerblue;\n"
+            + "--rzpg-markup-kw: cornflowerblue;\n"
+            + "--razor-keyword: cornflowerblue;\n"
+            + "--control-statement: magenta;\n"
+            + "--loop: magenta;\n"
+            + "--objects: magenta;\n"
+            + "--return: magenta;\n"
+            + "--cli-cmd-bg: var(--main-bg);\n"
+            + "--hl-yellow: #414110;\n"
+            + "--hl-red: darkred;\n"
+            + "/*--VARE_VARE_NAME_HERE: COLOR_HERE;*/\n"
+            + "\n}"
+            + ".notes-controls_btn{ --btn-color: magenta;\n--btn-border-color: magenta;\n}\n"
+            + ""
+            ;
+        }
+        else
+        {
+          style_el.innerHTML = "";
+        }
+      }
+      
+      
+      //add link func to call table of contents links//add func to all table of contents a: -> should return if mode is "all", should display_notes() if mode is "single" or "week"
+      let all_toc_links = document.querySelectorAll("#weeks_contents a");
+      all_toc_links.forEach(el => el.addEventListener("click", link_note_display));
+     
+    </script>
     
   </div>
   <!--END MAIN WRAPPER-->
