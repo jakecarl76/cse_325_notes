@@ -1162,7 +1162,7 @@
         rzpg_comment_hl.add(range);
     });
    //match all "/* */" C# like 'comments' in a @{} (this one works for comments w/out slash (/) )
-    Arrya.from(text_body.textContent.matchAll(/@\{[^\}]*(\/\*[^\/]*\*\/)/g, "d")).forEach( 
+    Array.from(text_body.textContent.matchAll(/@\{[^\}]*(\/\*[^\/]*\*\/)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
