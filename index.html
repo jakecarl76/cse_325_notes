@@ -576,7 +576,7 @@
     
     .space-around-el
     {
-      margin: 1em;
+      margin: 0.5em;
       display: inline-block;
     }
     
@@ -708,8 +708,10 @@
   
     //get the text node:
     text_body = el.firstChild;
-    //match all elements
-    text_body.textContent.matchAll(/<\/*([^>\s]+)/g, "d").forEach( 
+    //match all elements (Note, had to add in Array.from() before the .forEach() as safari didn't
+    //have the function integrated in the returned iterable obj returned by .matchAll() until 
+    //safari 18.4 updated in early 2025)
+    Array.from(text_body.textContent.matchAll(/<\/*([^>\s]+)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -728,7 +730,7 @@
     });
       
     //match all attributes
-    text_body.textContent.matchAll(/([^<>\s="]+)=/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/([^<>\s="]+)=/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -742,7 +744,7 @@
     });
     
     //match all 'strings'
-    text_body.textContent.matchAll(/("[^"]*")/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/("[^"]*")/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -803,7 +805,7 @@
     text_body = el.firstChild;
     
     //match all elements
-    text_body.textContent.matchAll(/(<\/*[^>\s]+)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/(<\/*[^>\s]+)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -817,7 +819,7 @@
     });
     
     //match all element butts
-    text_body.textContent.matchAll(/(\/*>)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/(\/*>)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -831,7 +833,7 @@
     });
       
     //match all attributes
-    text_body.textContent.matchAll(/([^<>\s="]+)=/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/([^<>\s="]+)=/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -845,7 +847,7 @@
     });
       
     //match all <!DOCTYPE> els
-    text_body.textContent.matchAll(/(<!DOCTYPE[^>]+>)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/(<!DOCTYPE[^>]+>)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -859,7 +861,7 @@
     });
     
     //match all 'strings'
-    text_body.textContent.matchAll(/("[^"]*")/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/("[^"]*")/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -873,7 +875,7 @@
     });
     
     //match all 'comments'
-    text_body.textContent.matchAll(/(<!--[^>]+-->)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/(<!--[^>]+-->)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -934,7 +936,7 @@
     text_body = el.firstChild;
     
     //match all Keywords (just the @ at beginning of doc)
-    text_body.textContent.matchAll(/^(@)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/^(@)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -949,7 +951,7 @@
     
     //match all Keywords (just the @ at beginning of new lines/newlines with space)
     //text_body.textContent.matchAll(/\n\s*(@)/g, "d").forEach( //old, may go back to if new fails
-    text_body.textContent.matchAll(/\n\s*\S*(@)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/\n\s*\S*(@)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -966,7 +968,7 @@
     });
     
     //match keywords (can add more words to this list with OR operator (ie. ->| ))
-    text_body.textContent.matchAll(/(@page|@model|@namespace|@addTagHelper)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/(@page|@model|@namespace|@addTagHelper)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -980,7 +982,7 @@
     });
     
     //match  starting part of @{...}
-    text_body.textContent.matchAll(/(@\{)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/(@\{)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -994,7 +996,7 @@
     });
     
     //match  trailing end part of @{...}
-    text_body.textContent.matchAll(/@\{[^\}]+(\})/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/@\{[^\}]+(\})/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -1008,7 +1010,7 @@
     });
       
     //match all using statements
-    text_body.textContent.matchAll(/(@using\s[^\n]+)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/(@using\s[^\n]+)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -1022,7 +1024,7 @@
     });
     
     //match all model classes, @page instructions, etc that aren't classes/methods
-    text_body.textContent.matchAll(/@[^\.\(\)\s\n]+[^\S\n]+([^\n]+)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/@[^\.\(\)\s\n]+[^\S\n]+([^\n]+)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -1036,7 +1038,7 @@
     });
     
     //match all 'comments' that don't have a * in them 
-    text_body.textContent.matchAll(/(@\*[^\*]*\*@)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/(@\*[^\*]*\*@)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -1050,7 +1052,7 @@
     });
     
     //match all 'comments' that don't have a @ in them 
-    text_body.textContent.matchAll(/(@\*[^@]*\*@)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/(@\*[^@]*\*@)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -1068,7 +1070,7 @@
     //about order and we need to match a pattern, not just a single symbol like > for html
     
     //match all "//" C# like 'comments' in a @{}    //only matches the first comment
-    text_body.textContent.matchAll(/@\{[^\}\/]*(\/\/[^\n]*)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/@\{[^\}\/]*(\/\/[^\n]*)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -1083,7 +1085,7 @@
     });
     //following code blocks an imperfect method to match up to five single line comments
     //match next #2 single lined comment comment
-    text_body.textContent.matchAll(/@\{[^\}\/]*\/\/[^\n]*[^\}\/]*(\/\/[^\n]*)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/@\{[^\}\/]*\/\/[^\n]*[^\}\/]*(\/\/[^\n]*)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -1098,7 +1100,7 @@
     });
     //match next #3 single lined comment comment
     ////////////////////////////////// [................*
-    text_body.textContent.matchAll(/@\{[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*(\/\/[^\n]*)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/@\{[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*(\/\/[^\n]*)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -1113,7 +1115,7 @@
     });
     //match next #4 single lined comment comment
     ////////////////////////////////// [................* (copy pattern below <- section to capture one more single line comment)
-    text_body.textContent.matchAll(/@\{[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*(\/\/[^\n]*)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/@\{[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*(\/\/[^\n]*)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -1128,7 +1130,7 @@
     });
     //match next #5 single lined comment comment
     ////////////////////////////////// [................*
-    text_body.textContent.matchAll(/@\{[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*(\/\/[^\n]*)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/@\{[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*\/\/[^\n]*[^\}\/]*(\/\/[^\n]*)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -1146,7 +1148,7 @@
     //multi line comments has similar issues to both the above single line comment and normal razor multi
     //line comments, so we will only try our best to capture just one (the last one)
    //match all "/* */" C# like 'comments' in a @{} (this one works for comments w/out star (*) )
-    text_body.textContent.matchAll(/@\{[^\}]*(\/\*[^\*]*\*\/)/g, "d").forEach( 
+    Array.from(text_body.textContent.matchAll(/@\{[^\}]*(\/\*[^\*]*\*\/)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -1160,7 +1162,7 @@
         rzpg_comment_hl.add(range);
     });
    //match all "/* */" C# like 'comments' in a @{} (this one works for comments w/out slash (/) )
-    text_body.textContent.matchAll(/@\{[^\}]*(\/\*[^\/]*\*\/)/g, "d").forEach( 
+    Arrya.from(text_body.textContent.matchAll(/@\{[^\}]*(\/\*[^\/]*\*\/)/g, "d")).forEach( 
       (item)=> {
         //create range of the text of element from match
         const range = new Range();
@@ -31266,10 +31268,10 @@
           document.getElementById("ndm_week").addEventListener("input", changeMode);
           document.getElementById("ndm_note").addEventListener("input", changeMode);
           
-            </script>
+        </script>
         </div>
         <div>
-          <span id="expander" class='link-btn ptr'>Expand All</span>
+          <span id="expander" class='link-btn ptr space-around-el'>Expand All</span>
           <script>
             document.getElementById("expander").addEventListener("click", 
               function()
@@ -34152,11 +34154,6 @@
     </div>
     <!--END MAIN DISPLAY-->
     <script>
-      //dvdvdvdvdvvd create search func? that searches via finde_note_index_of func?
-        //keeps a last-search index, finds search str note and highlihgts all occurances
-        //in the note/displays to user, when user hits NEXT will just increas start index
-        //to find next note inwhich search index occurs
-        
       //function adds in the buttons at the bottom when displaying by single note/week
       function display_page_btns(prev_index, next_index)
       {
@@ -34194,6 +34191,7 @@
           display_notes();
         });
       }
+      //END FUNC DISPLAY PAGE BTNS
         
       //function searches for given string in notes arr, returns first index where found
       function find_note_index_of(search_str, start = 0)
@@ -34382,23 +34380,27 @@
         }
         //END IF NOTES MODE NOT = ALL
         
+        //make sure to add highlights:
+        add_highlights();
       }
       //END FUNC DISPLAY Notes
       
       display_notes();
       
-      //highlight xaml texts (el's with .xaml class)
-      let xaml_els = document.querySelectorAll('.xaml');
-      xaml_els.forEach(el => setXAMLHighlights(el));
-      
-      //highlight html texts (el's with .html class)
-      let html_els = document.querySelectorAll('.html');
-      html_els.forEach(el => setHTMLHighlights(el));
-      
-      //highlight Razor Markup texts (el's with .html class)
-      let rzpg_els = document.querySelectorAll('.razor-markup');
-      rzpg_els.forEach(el => setRZPGHighlights(el));
-      
+      function add_highlights()
+      {
+        //highlight xaml texts (el's with .xaml class)
+        let xaml_els = document.querySelectorAll('.xaml');
+        xaml_els.forEach(el => setXAMLHighlights(el));
+        
+        //highlight html texts (el's with .html class)
+        let html_els = document.querySelectorAll('.html');
+        html_els.forEach(el => setHTMLHighlights(el));
+        
+        //highlight Razor Markup texts (el's with .html class)
+        let rzpg_els = document.querySelectorAll('.razor-markup');
+        rzpg_els.forEach(el => setRZPGHighlights(el));
+      }
       
       //dynamically add hiding to table of contents
       //target the #weeks_contents->first child's first child -> ul
