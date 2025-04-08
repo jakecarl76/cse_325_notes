@@ -34183,11 +34183,15 @@
         
         //add action listeners
         prev_btn.addEventListener("click", function(){
-          window.location.href = window.location.protocol + window.location.hostname + window.location.pathname + "#index" + prev_index;
+          //get base URL
+          let tmp_loc = window.location.href.replace(/#.+$/, "");
+          window.location.href = tmp_loc + "#index" + prev_index;
           display_notes();
         });
         next_btn.addEventListener("click", function(){
-          window.location.href = window.location.protocol + window.location.hostname + window.location.pathname + "#index" + next_index;
+          //get base URL
+          let tmp_loc = window.location.href.replace(/#.+$/, "");
+          window.location.href = tmp_loc + "#index" + next_index;
           display_notes();
         });
       }
